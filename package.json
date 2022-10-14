@@ -1,0 +1,27 @@
+{
+  "name": "klangapp",
+  "version": "1.0.0",
+  "description": "klang desktop",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "chcp 65001 && electron .",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "gulp": "gulp"
+  },
+
+
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.65",
+    "electron": "^20.0.2"
+  },
+  "dependencies": {
+  
+    "gulp": "^4.0.2",
+    "gulp-swig": "^0.9.1",
+    "iconv-lite": "^0.6.3"
+  }
+}

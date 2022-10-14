@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+{% block main_body %}
+
+	  <div class="container-full">
+      <section class="content">
+
+    
+      <div class="row" >
+
+
+			  <div class="col-12" >
+          <div class="box box-solid bg-info">
+            <div class="box-header">
+            <h4 class="box-title"><strong>  服务器启动信息</strong></h4>
+            </div>
+  
+  
+            <div class="box-body">
+              <pre>
+                <code id="server_status">
+
+                </code>
+              </pre>
+
+            </div>
+
+          </div>
+        </div>
+      </div> <!--row-->
+      
+  </section>
+  </div>
+
+
+    {% endblock %}
+
+
+
+    {% block externjs %}
+
+    <script>
+      $(document).ready(async function(){
+        
+        const result = await ipcRenderer.invoke('get_status', "")
+        console.log(result);
+        $("#server_status").html(result);
+    
+      })
+    </script>
+    
+    {% endblock %}
+

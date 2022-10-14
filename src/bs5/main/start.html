@@ -1,0 +1,56 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="referrer" content="origin-when-cross-origin" />
+  <title>开始Klang</title>
+</head>
+<body style="margin:0">
+
+<tab-group new-tab-button="true" sortable="true">
+  <style>
+    /* Add custom styles */
+    .my-badge {
+      background-color: #327BB1;
+    }
+    .my-custom-tab {
+      color: #d135d1;
+      font-style: italic;
+      font-weight: bold;
+    }
+  </style>
+</tab-group>
+
+
+	<script src="js/electron-tabs.js"></script>
+	<!-- electron  ipc script -->
+
+	<script>
+		// Select tab-group
+		const tabGroup = document.querySelector("tab-group");
+	  
+		// Setup the default tab which is created when the "New Tab" button is clicked
+		tabGroup.setDefaultTab({
+		  title: "主页",
+		  src: "./index.html",
+		  active: true
+		});
+        tabGroup.addTab({
+		  title: "主页",
+		  src: "./index.html",
+		  active: true
+		});
+	    tabGroup.addTab({
+         title: "启动信息",
+         src: "./server_status.html",
+         
+        });
+	</script>
+    </body>
+    </html>

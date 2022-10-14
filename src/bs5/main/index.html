@@ -1,0 +1,615 @@
+﻿{% extends 'layout.html' %}
+
+{% block main_body %}
+
+	  <div class="container-full" id="app">
+		<!-- Main content -->
+		<section class="content">
+			<div class="row">
+				<div class="col-10">
+					<div class="box bg-primary-light">
+						<div class="box-body d-flex px-0">
+							<div class="flex-grow-1 p-30 flex-grow-1 bg-img dask-bg bg-none-md" style="background-position: right bottom; background-size: auto 100%; background-image: url(../images/svg-icon/color-svg/custom-1.svg)">
+								<div class="row">
+									<div class="col-12 col-xl-7">
+										<h2>欢迎使用Klang 量化 <strong> 我的朋友们</strong></h2>
+
+
+										<p class="text-dark my-10 fs-16">
+											祝您天天 <strong class="text-warning"> 涨涨涨！</strong>
+										</p>
+									</div>
+									<div class="col-12 col-xl-5"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+		
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-10">
+
+					<div class="box mb-15 pull-up">
+						<div>
+							<div class="table-responsive">
+								<table class="table no-border mb-0">
+									<tbody>
+										<tr>
+											<td class="min-w-50">
+												<div class="bg-info-light h-50 w-50 l-h-50 rounded text-center">
+													<span class="icon-Book-open fs-24"><i class="fa fa-calendar-minus-o fs-16" aria-hidden="true"></i>
+												</span></div>
+											</td>
+	
+											<td class="fw-600 fs-16 min-w-150 text-center">
+												<i class="fa fa-fw fa-circle text-light fs-12" v-if="online==0"></i>
+												<i class="fa fa-fw fa-circle text-primary fs-12" v-if="online==1"></i>
+												 链接状态</td>
+											
+											
+											<td class="fw-400 fs-16 min-w-150 text-center" id="connect"><a class="btn btn-flat btn-info">连接服务器</a></td>
+											<td class="fw-600 fs-16 min-w-150 text-center" id="restart_server"><a class="btn btn-flat btn-warning">重启服务器</a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="box mb-15 pull-up">
+						<div>
+							<div class="table-responsive">
+								<table class="table no-border mb-0">
+									<tbody>
+										<tr>
+											<td class="min-w-50">
+												<div class="bg-warning-light h-50 w-50 l-h-50 rounded text-center">
+													<span class="icon-Book-open fs-24"><i class="fa fa-calendar-minus-o fs-16" aria-hidden="true"></i>
+												</span></div>
+											</td>
+
+											<td class="fw-600 fs-16 min-w-150 text-center"><i class="fa fa-fw fa-circle text-light fs-12" style="visibility: hidden"></i> 股票数据</td>
+											<td class="fw-600 fs-16 min-w-150 text-center" id="updatedata"><a class="btn btn-flat btn-info">更新数据</a></td>
+											<td class="fw-400 fs-16 min-w-150 text-center" id="downloaddata"><a class="btn btn-flat btn-warning">覆盖全部数据</a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-10">
+					<div class="box">
+						<div class="box-header with-border">
+						
+							<div class="demo-checkbox">
+								<input type="checkbox" id="md_checkbox_21" class="filled-in chk-col-primary" checked="" v-model="sourcelist.macd.select">
+								<label for="md_checkbox_21"><h4 class="box-title">MACD（3日内出现金叉）</h4></label>					
+							</div>
+		  
+							
+						</div>
+						<div class="box-body" v-if="sourcelist.macd.select">
+							<div class="demo-radio-button">
+								<input name="group5" type="radio" id="radio_535" class="with-gap radio-col-warning" v-model="sourcelist.macd.period" value="C">
+								<label for="radio_535">日线</label>
+								<input name="group5" type="radio" id="radio_532" class="with-gap radio-col-success" v-model="sourcelist.macd.period" value="WC">
+								<label for="radio_532">周线</label>
+								<input name="group5" type="radio" id="radio_533" class="with-gap radio-col-info" v-model="sourcelist.macd.period" value="MC">
+								<label for="radio_533">月线</label>
+
+							</div>
+						</div>
+
+					</div>
+
+					<div class="box">
+						<div class="box-header with-border">
+						
+							<div class="demo-checkbox">
+								<input type="checkbox" id="md_checkbox_22" class="filled-in chk-col-success" checked="" v-model="sourcelist.turn.select">
+								<label for="md_checkbox_22"><h4 class="box-title">换手率</h4></label>					
+							</div>
+		  
+							
+						</div>
+						<div class="box-body" v-if="sourcelist.turn.select">
+							<div class="demo-radio-button" >
+								<input name="group6" type="radio" id="radio_635" class="with-gap radio-col-warning"  v-model="sourcelist.turn.period" value="T">
+								<label for="radio_635">日线</label>
+								<input name="group6" type="radio" id="radio_632" class="with-gap radio-col-success" v-model="sourcelist.turn.period" value="WT">
+								<label for="radio_632">周线</label>
+								<input name="group6" type="radio" id="radio_633" class="with-gap radio-col-info" v-model="sourcelist.turn.period" value="MT">
+								<label for="radio_633">月线</label>
+
+							</div>
+						</div>
+					</div>
+
+					<div class="box">
+						<div class="box-header with-border">
+						
+							<div class="demo-checkbox">
+								<input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-info" checked="">
+								<label for="md_checkbox_23"><h4 class="box-title">横盘波动率</h4></label>					
+							</div>
+		  
+							
+						</div>
+						<div class="box-body">
+							<div class="demo-radio-button">
+								<input name="group7" type="radio" id="radio_735" class="with-gap radio-col-warning">
+								<label for="radio_735">日线</label>
+								<input name="group7" type="radio" id="radio_732" class="with-gap radio-col-success">
+								<label for="radio_732">周线</label>
+								<input name="group7" type="radio" id="radio_733" class="with-gap radio-col-info">
+								<label for="radio_733">月线</label>
+
+							</div>
+						</div>
+					</div>
+
+					<div class="box">
+						<div class="box-header with-border">
+						
+							<div class="demo-checkbox">
+								<input type="checkbox" id="md_checkbox_24" class="filled-in chk-col-warning" checked="" v-model="sourcelist.vol.select">
+								<label for="md_checkbox_24"><h4 class="box-title">成交量放大</h4></label>					
+							</div>
+		  
+							
+						</div>
+						<div class="box-body" v-if="sourcelist.vol.select">
+							<div class="demo-radio-button">
+								<input name="group8" type="radio" id="radio_835" class="with-gap radio-col-warning" v-model="sourcelist.vol.period" value="V">
+								<label for="radio_835">日线</label>
+								<input name="group8" type="radio" id="radio_832" class="with-gap radio-col-success" v-model="sourcelist.vol.period" value="WV">
+								<label for="radio_832">周线</label>
+								<input name="group8" type="radio" id="radio_833" class="with-gap radio-col-info" v-model="sourcelist.vol.period" value="MV">
+								<label for="radio_833">月线</label>
+
+							</div>
+						</div>
+					</div>
+
+
+
+					<div class="box">
+						<div class="box-header with-border">
+						
+							<div class="demo-checkbox">
+								<input type="checkbox" id="md_checkbox_25" class="filled-in chk-col-danger" checked="" v-model="sourcelist.ma30.select">
+								<label for="md_checkbox_25"><h4 class="box-title">价格上穿30均(2周期内)</h4></label>					
+							</div>
+		  
+							
+						</div>
+						<div class="box-body" v-if="sourcelist.ma30.select">
+							<div class="demo-radio-button">
+								<input name="group9" type="radio" id="radio_935" class="with-gap radio-col-warning" v-model="sourcelist.ma30.period" value="C">
+								<label for="radio_935">日线</label>
+								<input name="group9" type="radio" id="radio_932" class="with-gap radio-col-success" v-model="sourcelist.ma30.period" value="WC">
+								<label for="radio_932">周线</label>
+								<input name="group9" type="radio" id="radio_933" class="with-gap radio-col-info" v-model="sourcelist.ma30.period" value="MC">
+								<label for="radio_933">月线</label>
+
+							</div>
+						</div>
+					</div>
+
+
+
+					<div class="box">
+						<div class="box-header with-border">
+						
+							<div class="demo-checkbox">
+								<input type="checkbox" id="md_checkbox_code" class="chk-col-success" v-model="showcode">
+								<label for="md_checkbox_code"><h4 class="box-title">显示源代码</h4></label>					
+							</div>
+		  
+							<textarea rows="6" class="form-control" v-if="showcode" v-model="sourcecode"></textarea>
+						</div>
+						<div class="box-footer text-end">
+							<div class="spinner-border spinner-border-sm text-primary" role="status" v-if="work" style="margin-right:15px;">
+								<span class="visually-hidden">.</span>
+							</div>
+							<a  class="btn btn-danger" id="run">
+							  运行
+							</a>
+						</div>
+					</div>
+
+					<div class="box">
+					   <div class="box-body">
+						<div class="table-responsive"></div>
+
+						<table class="table table-bordered mb-0">
+						<thead>
+						<tr>
+						<th scope="col">#</th>
+						<th scope="col">name</th>
+						<th scope="col">code</th>
+						<th scope="col">值</th>
+						<th scope="col">流通值(亿)</th>
+						<th scope="col">板块</th>
+						<th scope="col">概念板块</th>
+						<th scope="col">筹码</th>
+						</tr>
+						</thead>
+						 <tbody>
+							<tr v-for="(item,index) in result" >
+							<th scope="row" >{{index+1}}</th>
+							<td><a v-bind:href="'https://klang.org.cn/kline.html?code='+item.code" target=_blank @click="openbrowser($event)">{{item.name}}</a></td>
+							<td><a v-bind:href="'https://gu.qq.com/'+item.code" target=_blank @click="openbrowser($event)"><font color=blue>{{item.code}}</font></a></td>
+							<td>{{item.value}}</td>
+							<td>{{item.hqltsz}}</td>
+							<td>{{item.tdxbk}}</td>
+							<td>{{item.tdxgn}}</td>
+							<td>{{item.chouma}}</td>
+							</tr>
+							</tbody>
+						</table> 
+					    </div> <!--box-body-->
+					</div>
+
+					</div><!--box-->	
+
+
+				</div><!--col-12-->
+				
+			 </div>
+		</section>
+		<!-- /.content -->
+	  </div>
+
+
+ {% endblock %}
+
+ {% block externjs %}
+
+ <script>
+   $(document).ready(async function(){
+	 
+   })
+ </script>
+
+<script>
+		const {shell} = require('electron')
+		
+		wshost = "ws://127.0.0.1:9088/user"
+	    
+	   
+		const VueApp = {
+		  data() {
+			  return {
+				  online:0,
+				  work:0,
+				  toask:"",			
+				  result:[],
+
+				  pages:{
+					page:[],
+					curnum:0,
+					pagesize:20,
+					pagenums:[],
+				  },
+				  sourcelist:{
+					macd:{
+						code:""+
+						"diff,dea,macd = MACD(PERIOD);\n"+
+						"ret = CROSS(diff,dea)\n"+
+ 						"retmacd = False ; \n"+
+						"if ret or ret[-1] or ret[-2]:\n"+
+ 						"       retmacd = True\n",
+						condition:"retmacd",
+						period:"C",
+						select:true,
+					},
+					turn:{
+						code:""+
+						"retturn = 0\n"+
+						"if PERIODT > objturn:\n"+
+						"  retturn = 1\n",
+						condition:"retturn",
+						period:"T",
+						select:true,
+						objturn:"3",
+					},
+				   vol:{
+						code:""+
+						"retvol = 0\n"+
+						"ma10vol = MA(PERIODV,10)\n"+
+						"ma10vol = ma10vol * 2\n"+
+						"if V >= ma10vol:\n"+
+						"   retvol = 1",
+						condition:"retvol",
+						period:"V",
+						select:true,
+					},
+					volatility:{
+						code:""+
+						""+
+						""+
+						"",
+						condition:"retvolatility",
+						period:"d",
+						select:true,
+					},
+					ma30:{
+						code:""+
+						"retma30 = 0 \n"+
+						"ma30 = MA(PERIODMA,30)\n" +
+						"ret = CROSS(PERIODMA,ma30)\n"+
+						"if ret or ret[-1]:\n" + 
+						" retma30 = 1",
+						condition:"retma30",
+						period:"C",
+						select:true,
+					}
+				},
+				  info:{code:"",name:"",
+					stocklength:0,
+					curlength:0,
+					cost:0,
+					value:0,
+					per:0,
+					tempcost:0,
+					alert:0,
+				  },
+				showcode:false,
+				sourcecode:"",
+
+
+
+				 
+			  }
+		  },
+	  
+		  created() {
+			  
+		  },
+  
+		  async mounted () {
+
+			  this.make_code()
+		  },
+		  methods: {
+
+			pageup:function(index){
+			  this.pages.curnum = index
+			  p = this.pages 
+			  start = (index-1)*p.pagesize
+			  end = index*p.pagesize
+			  if (start < 0) start = 0
+			  if (end < 1) end = 1
+			  if (end > this.result.length) end = this.result.length 
+			  this.pages.page = this.result.slice(start,end)
+						  
+			},
+			pagenext:function(){
+			  p = this.pages
+			  console.log(p.pagenums)
+			  if (this.pages.pagenums[4] < this.result.length / p.pagesize){
+				this.pages.curnum += 1
+				this.pageup(this.pages.curnum)
+				var nums=[]
+				this.pages.pagenums.map(function(index){
+				  nums.push(index+1)
+				})              
+				this.pages.pagenums = nums
+				
+			  }
+			},
+			pageprev:function(){
+			  p = this.pages
+			  if (this.pages.pagenums[4] > 5 ){
+				this.pages.curnum -= 1
+				var nums=[]
+				this.pages.pagenums.map(function(index){
+				  nums.push(index-1)
+				})              
+				this.pages.pagenums = nums
+				this.pageup(this.pages.curnum)
+			  }
+			},
+			openbrowser:function(event){
+				url = event.target.href
+				event.preventDefault();
+				shell.openExternal(url);
+			},
+			make_code(){
+				//"macd","turn", "vol","ma30","volatility"
+				var code = ""
+				var condition = "if True "
+
+				//macd
+				if (this.sourcelist.macd.select == true) {
+					code += "### MACD 金叉计算公式 ###\n";
+					macd_period = "PERIOD = " + this.sourcelist.macd.period  + "\n";
+					
+					code += macd_period + this.sourcelist.macd.code + "\n";
+					condition += " and " + this.sourcelist.macd.condition
+				}
+				
+
+				//turn 
+				if (this.sourcelist.turn.select == true) {
+					code +="###  换手率计算公式  ###\n";
+					turn_period = "PERIODT = " + this.sourcelist.turn.period  + "\n";
+					code += "objturn = " + this.sourcelist.turn.objturn + "\n";
+					code += turn_period + this.sourcelist.turn.code + "\n";
+					condition += " and " + this.sourcelist.turn.condition
+				}
+				
+				//vol
+				if (this.sourcelist.vol.select == true) {
+					code +="###  成交量放大公式  ###\n";
+					vol_period = "PERIODV = " + this.sourcelist.vol.period  + "\n";
+					code += vol_period + this.sourcelist.vol.code + "\n";
+					condition += " and " + this.sourcelist.vol.condition
+				}
+
+				//vol
+				if (this.sourcelist.ma30.select == true) {
+					code +="###  上穿30日均线公式  ###\n";
+					ma30_period = "PERIODMA = " + this.sourcelist.ma30.period  + "\n";
+					code += ma30_period + this.sourcelist.ma30.code + "\n";
+					condition += " and " + this.sourcelist.ma30.condition
+				}
+
+				condition += ":\n" +
+				"      DISPLAY(C);\n";
+
+				this.sourcecode = code + condition 
+
+			}
+		  },
+		  watch:{
+
+			"sourcelist.macd.select":function(newval,old){
+
+				this.make_code()
+			},
+			"sourcelist.macd.period":function(newval,old){
+				this.make_code()
+			},
+			"sourcelist.turn.select":function(newval,old){
+
+				this.make_code()
+			},
+			"sourcelist.turn.period":function(newval,old){
+				this.make_code()
+			}
+  
+		  }
+		}//VueApp
+		window.vue = Vue.createApp(VueApp).mount('#app')
+  
+  
+		var run = document.querySelector('#run');
+		var reconnect = document.querySelector('#connect');
+		var updatedata = document.querySelector('#updatedata');
+		var downloaddata = document.querySelector('#downloaddata');
+		var restart_server = document.querySelector('#restart_server');
+
+		var websocket;
+		websocket = new WebSocket(wshost);
+		vue.$data.online = 1
+  
+		function  webonmessage (event) {
+				  data = JSON.parse(event.data);
+				  //connstate.checked = true 
+				  console.log(data)
+				  switch (data.type) {
+					  case 'U_RET':
+						 
+						  if (data.retcode=="ERROR"){
+							  alert("系统正在执行其他任务，请稍等");
+						  } 
+						  if (data.retcode=="DISPLAY"){
+							code = data.code.replace(".","")
+                          	hqltsz = data.hqltsz.toFixed(2)
+                          	tdxbk = data.tdxbk
+                          	tdxgn = data.tdxgn
+                          	chouma = data.chouma
+
+                          	value = data.value
+                      
+                          	vue.$data.result.push({name:data.name,code:code,value:value,hqltsz:hqltsz,tdxbk:tdxbk,tdxgn:tdxgn,chouma:chouma})
+							
+						  }  
+						   
+						  break;
+					  case 'U_INFO':
+						  vue.$data.usercount = data.users
+						  vue.$data.online = 1
+						  vue.$data.servers = data.servers
+						  break;
+					  case 'U_DONE':
+						  vue.$data.work = 0
+						  break;
+  
+					  default:
+						  console.error(
+							  "unsupported event", data);
+				  }
+			  };
+		function webonclose (e) {
+					  console.log('websocket 断开: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)
+					  vue.$data.online = 0
+					  
+					  
+		}
+  
+		websocket.onclose = webonclose
+		websocket.onmessage = webonmessage
+  
+		function send_task(){
+				vue.$data.result = []
+				 
+				vue.$data.work = true
+
+				websocket.send(JSON.stringify({type: 'U_EXE',content:vue.$data.sourcecode,stype:0,loop:true}));
+		}
+
+		run.onclick = function (event) {
+			
+				  console.log(vue.$data.online,websocket.readyState)
+				  if (vue.$data.work){
+					vue.$data.toask.content = "我在计算中，你别总点我"
+					vue.$data.toask.state = 1
+					return 
+				  }
+				  if (vue.$data.online == 0 || websocket.readyState == 3){
+					websocket = new WebSocket(wshost);
+					vue.$data.online = 1
+					vue.$data.toask.content = "正在重新连接服务器,约10秒后再试"
+					vue.$data.toask.state = 1
+					websocket.onclose = webonclose
+					websocket.onmessage = webonmessage
+					setTimeout("send_task()",1000);
+					return 
+				  }
+				  if (websocket.readyState == 0){
+					vue.$data.toask.content = "正在连接服务器请稍后再测试"
+					vue.$data.toask.state = 1
+					return 
+				  }
+				  if (vue.$data.servers.indexOf(0) == -1){
+					vue.$data.toask.content = "没有空闲服务器请稍等"
+					vue.$data.toask.state = 1
+					  return
+				  }
+  
+				  send_task();
+				 
+		}
+		updatedata.onclick = function(event){
+			websocket.send(JSON.stringify({type: 'U_CMD',content:"UPDATEALL",stype:0,loop:true}));
+		}
+  
+		downloaddata.onclick = function(event){
+			websocket.send(JSON.stringify({type: 'U_CMD',content:"DOWNLOADALL",stype:0,loop:true}));
+		}
+		reconnect.onclick = function(event){
+			websocket = new WebSocket(wshost);
+			vue.$data.online = 1
+
+			websocket.onclose = webonclose
+			websocket.onmessage = webonmessage
+		}
+		restart_server.onclick = function(event){
+			reset_server(); //renderer.js
+		}
+		  
+  
+  </script>
+ 
+ {% endblock %}
