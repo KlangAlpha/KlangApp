@@ -53,7 +53,7 @@ function run_script(command, args, errcallback,successcallback) {
 
 }
 
-function exec_out (cmd,args){
+function exec_out (cmd,args,callback){
     const handle = child_process.spawn(cmd, args,{env: {NODE_ENV: 'production'},shell:true});
 
 
@@ -63,6 +63,15 @@ function exec_out (cmd,args){
         
         app.mainWin.webContents.send("log",data.toString()+"\n");
     });
+
+    handle.on("exit",(code)=>{
+        console.log(code)
+        if (code == 1) return 
+        if (typeof callback === 'function'){
+            callback()
+        }
+            
+    })
 
 }
 
@@ -122,7 +131,7 @@ ipcMain.handle('install_default_python',async (event, message) => {
 })
 
 function instal_default_python(){
-    exec_status("powershell.exe '",  [root_path + "\\python-3.10.7-amd64.exe'"])
+    exec_status("powershell.exe ",  ["powershell.exe '" + root_path + "\\python-3.10.7-amd64.exe'"])
 }
 
 function start_server(){
@@ -157,12 +166,17 @@ function python_check(){
 
             app.mainWin.loadFile('./dist/main/install_klang.html');        
              
-            exec_out("powershell.exe",  ["pip3.exe install '" + root_path + "\\TA_Lib-0.4.24-cp310-cp310-win_amd64.whl'"])
+            exec_out("powershell.exe",  ["pip3.exe install '" + root_path + "\\TA_Lib-0.4.24-cp310-cp310-win_amd64.whl'"],function(){
+                exec_out("powershell.exe",  ["pip3.exe install -r '" + root_path + "\\Klang\\requirements.txt'"],function(){
+                    exec_out("powershell.exe",["pip3.exe install '" + root_path + "\\Klang'"],function(){
+                        app.mainWin.webContents.send("log","Klang 安装完成，请重启程序"+"\n");
+                        console.log("Klang 安装完成，请重启程序");
+                    })
+                })
+            })
            
-            exec_out("powershell.exe",  ["pip3.exe install -r '" + root_path + "\\Klang\\requirements.txt'"])
-   
-            exec_out("powershell.exe",["pip3.exe install '" + root_path + "\\Klang'"])
-        console.log("Not install klang");
+           
+           
     });
 
 
