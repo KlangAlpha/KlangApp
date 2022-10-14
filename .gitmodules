@@ -1,0 +1,3 @@
+[submodule "src/Klang"]
+	path = src/Klang
+	url = https://github.com/KlangAlpha/Klang
