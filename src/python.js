@@ -130,6 +130,11 @@ ipcMain.handle('install_default_python',async (event, message) => {
     return 'ok'
 })
 
+ipcMain.handle('install_lib',async (event, message) => {
+    install_lib();
+    return 'ok'
+})
+
 function instal_default_python(){
     exec_status("powershell.exe ",  ["powershell.exe '" + root_path + "\\python-3.10.7-amd64.exe'"])
 }
@@ -142,6 +147,21 @@ function start_server(){
         // python.exe .\src\Klang\server\kws_server.py
 }
 
+function install_lib(){
+
+    app.mainWin.loadFile('./dist/main/install_klang.html');        
+             
+    exec_out("powershell.exe",  ["pip3.exe install '" + root_path + "\\TA_Lib-0.4.24-cp310-cp310-win_amd64.whl'"],function(){
+        exec_out("powershell.exe",  ["pip3.exe install -r '" + root_path + "\\Klang\\requirements.txt'"],function(){
+            exec_out("powershell.exe",["pip3.exe install '" + root_path + "\\Klang'"],function(){
+                app.mainWin.webContents.send("log","Klang 安装完成，请重启程序"+"\n");
+                console.log("Klang 安装完成，请重启程序");
+            })
+        })
+    })
+   
+   
+}
 function python_check(){
 
 
@@ -164,18 +184,7 @@ function python_check(){
     // 检查是否安装过Klang，如果没有，就安装依赖，安装Klang
     run_script("pip3.exe",["show --file Klang"],function( ){
 
-            app.mainWin.loadFile('./dist/main/install_klang.html');        
-             
-            exec_out("powershell.exe",  ["pip3.exe install '" + root_path + "\\TA_Lib-0.4.24-cp310-cp310-win_amd64.whl'"],function(){
-                exec_out("powershell.exe",  ["pip3.exe install -r '" + root_path + "\\Klang\\requirements.txt'"],function(){
-                    exec_out("powershell.exe",["pip3.exe install '" + root_path + "\\Klang'"],function(){
-                        app.mainWin.webContents.send("log","Klang 安装完成，请重启程序"+"\n");
-                        console.log("Klang 安装完成，请重启程序");
-                    })
-                })
-            })
-           
-           
+        install_lib()
            
     });
 

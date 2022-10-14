@@ -36,4 +36,8 @@ ipcRenderer.on('status', (event, message) => {
  async function install_default_python_func(){
     await ipcRenderer.invoke('install_default_python',"");
  }
+
+ async function install_lib(){
+    await ipcRenderer.invoke('install_lib',"");
+ }
 //const result = await ipcRenderer.invoke('get_status', "")

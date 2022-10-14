@@ -31,6 +31,8 @@
              三、安装Klang  server  </p>
              --提示：安装完成后 重新启动 KlangApp 程序自动安装Klang server,如果一次安装不成功可以多启动几次。（每次要等待5分钟左右，安装程序较慢）  </p>
 
+             四、手动安装库 Klang server </p>
+             -- 可以按照第三步提示，关闭后启动自动安装。 尝试手动<a class="btn-sm btn-info"  href="./install_klang.html" id="install_lib">安装</a>
             </div>
 
           </div>
@@ -87,6 +89,9 @@
     
         $("#install_default_python").click(function(){
           install_default_python_func();
+        })
+        $("#install_lib").click(function(){
+          install_lib();
         })
 
       })
