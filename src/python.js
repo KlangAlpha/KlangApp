@@ -141,6 +141,17 @@ ipcMain.handle('install_lib',async (event, message) => {
     return 'ok'
 })
 
+ipcMain.handle('download_data_zip',async (event, message) => {
+    download_data_zip();
+    return 'ok'
+})
+
+function download_data_zip(){
+
+    exec_status("powershell.exe",["python.exe -u '" + root_path + "\\Klang\\tools\\download.py'"])
+}
+
+
 function instal_default_python(){
     exec_status("powershell.exe ",  ["powershell.exe '" + root_path + "\\python-3.10.7-amd64.exe'"])
 }

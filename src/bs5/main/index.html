@@ -596,7 +596,7 @@
 		}
   
 		downloaddata.onclick = function(event){
-			websocket.send(JSON.stringify({type: 'U_CMD',content:"DOWNLOADALL",stype:0,loop:true}));
+			download_data_zip();
 		}
 		reconnect.onclick = function(event){
 			websocket = new WebSocket(wshost);

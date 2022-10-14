@@ -40,4 +40,7 @@ ipcRenderer.on('status', (event, message) => {
  async function install_lib(){
     await ipcRenderer.invoke('install_lib',"");
  }
+ async function download_data_zip(){
+    await ipcRenderer.invoke('download_data_zip',"");
+ }
 //const result = await ipcRenderer.invoke('get_status', "")
