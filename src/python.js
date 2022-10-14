@@ -64,6 +64,12 @@ function exec_out (cmd,args,callback){
         app.mainWin.webContents.send("log",data.toString()+"\n");
     });
 
+    handle.stderr.on('data', (data) => {
+        data = Buffer.from(iconv.decode(data,"GB2312"))
+        console.log(data.toString());
+        
+        app.mainWin.webContents.send("log",data.toString()+"\n");
+    });
     handle.on("exit",(code)=>{
         console.log(code)
         if (code == 1) return 
@@ -131,7 +137,7 @@ ipcMain.handle('install_default_python',async (event, message) => {
 })
 
 ipcMain.handle('install_lib',async (event, message) => {
-    install_lib();
+    install_lib("data");
     return 'ok'
 })
 
@@ -147,15 +153,25 @@ function start_server(){
         // python.exe .\src\Klang\server\kws_server.py
 }
 
-function install_lib(){
+function install_lib(data){
 
     app.mainWin.loadFile('./dist/main/install_klang.html');        
              
     exec_out("powershell.exe",  ["pip3.exe install '" + root_path + "\\TA_Lib-0.4.24-cp310-cp310-win_amd64.whl'"],function(){
         exec_out("powershell.exe",  ["pip3.exe install -r '" + root_path + "\\Klang\\requirements.txt'"],function(){
             exec_out("powershell.exe",["pip3.exe install '" + root_path + "\\Klang'"],function(){
-                app.mainWin.webContents.send("log","Klang 安装完成，请重启程序"+"\n");
-                console.log("Klang 安装完成，请重启程序");
+                if (data == "data"){
+                    app.mainWin.webContents.send("log","Klang 安装完成,正在下载数据"+"\n");
+                    console.log("Klang 安装完成，正在下载数据");
+                    exec_out("powershell.exe",["python.exe -u '" + root_path + "\\Klang\\tools\\download.py'"],function(){
+                        app.mainWin.webContents.send("log","数据下载完成,重启APP后使用"+"\n");
+                        console.log("数据下载完成,重启APP后使用");
+                    })
+                }else {
+                    app.mainWin.webContents.send("log","Klang 安装完成,重启APP后使用"+"\n");
+                    console.log("Klang 安装完成，重启APP后使用");
+                }
+
             })
         })
     })
@@ -184,7 +200,7 @@ function python_check(){
     // 检查是否安装过Klang，如果没有，就安装依赖，安装Klang
     run_script("pip3.exe",["show --file Klang"],function( ){
 
-        install_lib()
+        install_lib("data")
            
     });
 
