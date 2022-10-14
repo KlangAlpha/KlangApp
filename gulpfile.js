@@ -11,8 +11,7 @@ async function templates (){
 }
 
 async function base (){
-  gulp.src(['./src/renderer.js',
-        './node_modules/electron-tabs/dist/electron-tabs.js'])
+  gulp.src(['./src/renderer.js'])
   .pipe(gulp.dest('./dist/main/js/'))
 
   return gulp.src('./src/logo.svg')
