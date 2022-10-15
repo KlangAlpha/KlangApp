@@ -2,7 +2,7 @@ const { app, BrowserWindow ,dialog,shell,ipcMain,Menu} = require('electron');
 const path = require('path');
 const child_process= require('child_process');
 const menu = require('./menu');
-const python_check = require('./python');
+const {python_check,close_server} = require('./python');
 const download_init = require('./download');
 
 
@@ -46,6 +46,8 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
+
+  close_server()
   if (process.platform !== 'darwin') {
     app.quit()
   }

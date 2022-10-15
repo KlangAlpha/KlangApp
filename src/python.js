@@ -83,7 +83,8 @@ function exec_out (cmd,args,callback){
 
 var server_status = ""
 function exec_status (cmd,args){
-    const handle = child_process.spawn(cmd, args,{env: {NODE_ENV: 'production'},shell:true});
+   
+    const handle = child_process.spawn(cmd, args,{env: {NODE_ENV: 'production'},shell:false});
 
 
    
@@ -103,10 +104,15 @@ function exec_status (cmd,args){
         data = Buffer.from(iconv.decode(data,"GB2312"))
         console.log(data.toString());
         date = new Date();
-        app.mainWin.webContents.send("status",date.toString() +": "+ data.toString()+"\n");
+        try {
+            app.mainWin.webContents.send("status",date.toString() +": "+ data.toString()+"\n");
+        } catch(e){
+
+        }
+        
         server_status += date.toString() +": "+ data.toString()+"\n";
     });
-
+    return handle
 }
 
 
@@ -156,12 +162,30 @@ function instal_default_python(){
     exec_status("powershell.exe ",  ["powershell.exe '" + root_path + "\\python-3.10.7-amd64.exe'"])
 }
 
+var manager_handler;
+var server_handler;
 function start_server(){
+
         //启动 Klang服务器
-        exec_status("powershell.exe",  [" python.exe  -u '" + root_path + "\\Klang\\server\\kws_manager.py'"])
+        
+        manager_handler = exec_status("python.exe",  [ root_path + "\\Klang\\server\\kws_manager.py"])
         // python.exe .\src\Klang\server\kws_manager.py
-        exec_status("powershell.exe",  ["python.exe -u '" + root_path + "\\Klang\\server\\kws_server.py'"])
+       
+        server_handler = exec_status("python.exe",  [ root_path + "\\Klang\\server\\kws_server.py"])
         // python.exe .\src\Klang\server\kws_server.py
+}
+
+function close_server(){
+    console.log("close_server")
+
+    if (typeof manager_handler == "object"){
+       
+
+        manager_handler.kill()
+        server_handler.kill()
+        console.log("server kill")
+    };
+
 }
 
 function install_lib(data){
@@ -189,20 +213,13 @@ function install_lib(data){
    
    
 }
+
 function python_check(){
 
 
     // 先 检查 之前是否启动了 klang server
-    
-    run_script("wmic", ["process where \"commandline like '%kws%' and name like '%python%' \" get processid"],function(){},function(data){
-        data = data.toString()
-        pids = data.split('\n')
-        for (i=1;i<pids.length;i++){
-            run_script("taskkill",["/F /pid " +  pids[i]],function(){},function(){})  
-        }
-            
-      
-    })
+    close_server();
+
     // 检查是否安装python3
     run_script("where.exe",[" pip3.exe"],function( ){
         app.mainWin.loadFile('./dist/main/python_check.html');
@@ -221,4 +238,7 @@ function python_check(){
 }
 
 
-module.exports = python_check;
+module.exports = {
+    python_check,
+    close_server,
+};

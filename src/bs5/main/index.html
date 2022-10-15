@@ -429,6 +429,7 @@
 				var code = ""
 				var condition = "if True "
 
+				
 				//macd
 				if (this.sourcelist.macd.select == true) {
 					code += "### MACD 金叉计算公式 ###\n";
@@ -458,6 +459,7 @@
 
 				//vol
 				if (this.sourcelist.ma30.select == true) {
+					
 					code +="###  上穿30日均线公式  ###\n";
 					ma30_period = "PERIODMA = " + this.sourcelist.ma30.period  + "\n";
 					code += ma30_period + this.sourcelist.ma30.code + "\n";
@@ -466,7 +468,7 @@
 
 				condition += ":\n" +
 				"      DISPLAY(C);\n";
-
+				
 				this.sourcecode = code + condition 
 
 			}
@@ -485,6 +487,22 @@
 				this.make_code()
 			},
 			"sourcelist.turn.period":function(newval,old){
+				this.make_code()
+			},
+			
+			"sourcelist.vol.select":function(newval,old){
+
+				this.make_code()
+			},
+			"sourcelist.vol.period":function(newval,old){
+				this.make_code()
+			},
+
+			"sourcelist.ma30.select":function(newval,old){
+
+				this.make_code()
+			},
+			"sourcelist.ma30.period":function(newval,old){
 				this.make_code()
 			}
   
