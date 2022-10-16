@@ -28,9 +28,20 @@ ipcRenderer.on('status', (event, message) => {
     $("#server_status").html(content + message);
 
  })
+ ipcRenderer.on('status_stderr', (event, message) => {
+   
+    var content = $("#server_status_stderr").html();
+
+    $("#server_status_stderr").html(content + message);
+
+ })
 //调用 main.js 函数，很多实现在python.js里面
  async function reset_server(){
     await ipcRenderer.invoke('reset_server',"");
+ }
+
+ async function stop_server_func(){
+    await ipcRenderer.invoke('stop_server',"");
  }
 
  async function install_default_python_func(){

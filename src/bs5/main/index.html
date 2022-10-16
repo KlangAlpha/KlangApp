@@ -49,6 +49,7 @@
 											
 											
 											<td class="fw-400 fs-16 min-w-150 text-center" id="connect"><a class="btn btn-flat btn-info">连接服务器</a></td>
+											<td class="fw-400 fs-16 min-w-150 text-center" id="stop_server"><a class="btn btn-flat btn-info">停止服务器</a></td>
 											<td class="fw-600 fs-16 min-w-150 text-center" id="restart_server"><a class="btn btn-flat btn-warning">重启服务器</a></td>
 										</tr>
 									</tbody>
@@ -69,7 +70,7 @@
 													<span class="icon-Book-open fs-24"><i class="fa fa-calendar-minus-o fs-16" aria-hidden="true"></i>
 												</span></div>
 											</td>
-
+											<td class="fw-600 fs-16 min-w-150 text-center" >动态数据</td>
 											<td class="fw-600 fs-16 min-w-150 text-center"><i class="fa fa-fw fa-circle text-light fs-12" style="visibility: hidden"></i> 股票数据</td>
 											<td class="fw-600 fs-16 min-w-150 text-center" id="updatedata"><a class="btn btn-flat btn-info">更新数据</a></td>
 											<td class="fw-400 fs-16 min-w-150 text-center" id="downloaddata"><a class="btn btn-flat btn-warning">覆盖全部数据</a></td>
@@ -516,6 +517,7 @@
 		var updatedata = document.querySelector('#updatedata');
 		var downloaddata = document.querySelector('#downloaddata');
 		var restart_server = document.querySelector('#restart_server');
+		var stop_server = document.querySelector('#stop_server');
 
 		var websocket;
 		websocket = new WebSocket(wshost);
@@ -562,6 +564,7 @@
 		function webonclose (e) {
 					  console.log('websocket 断开: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)
 					  vue.$data.online = 0
+					  vue.$data.work = 0
 					  
 					  
 		}
@@ -625,6 +628,9 @@
 		}
 		restart_server.onclick = function(event){
 			reset_server(); //renderer.js
+		}
+		stop_server.onclick = function(event){
+			stop_server_func(); //renderer.js
 		}
 		  
   

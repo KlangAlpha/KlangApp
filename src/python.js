@@ -82,9 +82,11 @@ function exec_out (cmd,args,callback){
 }
 
 var server_status = ""
+var server_status_stderr=""
 function exec_status (cmd,args){
    
-    const handle = child_process.spawn(cmd, args,{env: {NODE_ENV: 'production'},shell:false});
+    const handle = child_process.spawn(cmd, args,{env: {NODE_ENV: 'production'},
+                                                    shell:false});
 
 
    
@@ -105,12 +107,12 @@ function exec_status (cmd,args){
         console.log(data.toString());
         date = new Date();
         try {
-            app.mainWin.webContents.send("status",date.toString() +": "+ data.toString()+"\n");
+            app.mainWin.webContents.send("status_stderr",date.toString() +": "+ data.toString()+"\n");
         } catch(e){
 
         }
         
-        server_status += date.toString() +": "+ data.toString()+"\n";
+        server_status_stderr += date.toString() +": "+ data.toString()+"\n";
     });
     return handle
 }
@@ -119,6 +121,11 @@ function exec_status (cmd,args){
 ipcMain.handle('get_status', async (event, message) => {
     console.log(server_status);
     return server_status;
+})
+
+ipcMain.handle('get_status_stderr', async (event, message) => {
+    console.log(server_status_stderr);
+    return server_status_stderr;
 })
   
 ipcMain.handle('reset_server',async (event, message) => {
@@ -134,6 +141,22 @@ ipcMain.handle('reset_server',async (event, message) => {
     })
     setTimeout(start_server,1000);
     
+    return 'ok'
+})
+
+
+ipcMain.handle('stop_server',async (event, message) => {
+        
+    run_script("wmic", ["process where \"commandline like '%kws%' and name like '%python%' \" get processid"],function(){},function(data){
+        data = data.toString()
+        pids = data.split('\n')
+        for (i=1;i<pids.length;i++){
+            run_script("taskkill",["/F /pid " +  pids[i]],function(){},function(){})  
+        }
+            
+    })
+  
+    close_server()
     return 'ok'
 })
 
@@ -167,11 +190,11 @@ var server_handler;
 function start_server(){
 
         //启动 Klang服务器
-        
-        manager_handler = exec_status("python.exe",  [ root_path + "\\Klang\\server\\kws_manager.py"])
+        // python -u  无缓冲输出
+        manager_handler = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_manager.py"])
         // python.exe .\src\Klang\server\kws_manager.py
        
-        server_handler = exec_status("python.exe",  [ root_path + "\\Klang\\server\\kws_server.py"])
+        server_handler = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"])
         // python.exe .\src\Klang\server\kws_server.py
 }
 
