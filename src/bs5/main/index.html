@@ -212,7 +212,9 @@
 						
 							<div class="demo-checkbox">
 								<input type="checkbox" id="md_checkbox_code" class="chk-col-success" v-model="showcode">
-								<label for="md_checkbox_code"><h4 class="box-title">显示源代码</h4></label>					
+								<label for="md_checkbox_code"><h4 class="box-title">显示源代码</h4></label>		
+								<input type="checkbox" id="md_klang_server" class="chk-col-success" v-model="klangserver">
+								<label for="md_klang_server"><h4 class="box-title">远程运行</h4></label>				
 							</div>
 		  
 							<textarea rows="15" class="form-control" v-if="showcode" v-model="sourcecode"></textarea>
@@ -221,7 +223,8 @@
 							<div class="spinner-border spinner-border-sm text-primary" role="status" v-if="work" style="margin-right:15px;">
 								<span class="visually-hidden">.</span>
 							</div>
-							<a  class="btn btn-danger" id="run">
+							<span>{{runcode}}</span>
+							<a  class="btn btn-danger" style="margin-left:5px;" id="run">
 							  运行
 							</a>
 						</div>
@@ -372,6 +375,8 @@
 				  },
 				showcode:false,
 				sourcecode:"",
+				klangserver:false,
+				runcode:"",
 
 
 
@@ -400,7 +405,7 @@
 				var code = ""
 				var condition = "if True "
 
-				
+				code += "PROGRESS(0);\n";
 				//macd
 				if (this.sourcelist.macd.select == true) {
 					code += this.sourcelist.macd.title;
@@ -499,6 +504,20 @@
 			},
 			"sourcelist.ma30.period":function(newval,old){
 				this.make_code()
+			},
+			klangserver:function(newval,old){
+				if (this.klangserver == true){
+					wshost = "wss://klang.org.cn:8099/user";
+
+				} else {
+					wshost = "ws://127.0.0.1:9088/user"
+				}
+
+				websocket = new WebSocket(wshost);
+				vue.$data.online = 1
+
+				websocket.onclose = webonclose
+				websocket.onmessage = webonmessage
 			}
   
 		  }
@@ -539,6 +558,12 @@
                           	vue.$data.result.push({name:data.name,code:code,value:value,hqltsz:hqltsz,tdxbk:tdxbk,tdxgn:tdxgn,chouma:chouma})
 							
 						  }  
+
+						  if (data.retcode=="PROGRESS"){
+							code = data.code.replace(".","")
+							vue.$data.runcode = code 
+
+						  }
 						   
 						  break;
 					  case 'U_INFO':

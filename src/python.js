@@ -29,7 +29,7 @@ function run_script(command, args, errcallback,successcallback) {
         console.log(data.toString())
  
         if (typeof successcallback === 'function')
-            successcallback(data);      
+            successcallback(data.toString());      
     });
 
 
@@ -69,6 +69,9 @@ function exec_out (cmd,args,callback){
         console.log(data.toString());
         
         app.mainWin.webContents.send("log",data.toString()+"\n");
+        
+        
+        
     });
     handle.on("exit",(code)=>{
         console.log(code)
@@ -83,10 +86,10 @@ function exec_out (cmd,args,callback){
 
 var server_status = ""
 var server_status_stderr=""
-function exec_status (cmd,args){
+function exec_status (cmd,args,isshell){
    
     const handle = child_process.spawn(cmd, args,{env: {NODE_ENV: 'production'},
-                                                    shell:false});
+                                                    shell:isshell});
 
 
    
@@ -182,12 +185,13 @@ ipcMain.handle('download_data_zip',async (event, message) => {
 
 function download_data_zip(){
 
-    exec_status("powershell.exe",["python.exe -u '" + root_path + "\\Klang\\tools\\download.py'"])
+    exec_status("powershell.exe",["python.exe -u '" + root_path + "\\Klang\\tools\\download.py'"],true)
 }
 
 
 function instal_default_python(){
-    exec_status("powershell.exe ",  ["powershell.exe '" + root_path + "\\python-3.10.7-amd64.exe'"])
+    
+    exec_status("powershell.exe",  ['Start-Process',"'" + root_path + "\\python-3.10.7-amd64.exe'"],false)
 }
 
 var manager_handler;
@@ -196,10 +200,10 @@ function start_server(){
 
         //启动 Klang服务器
         // python -u  无缓冲输出
-        manager_handler = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_manager.py"])
+        manager_handler = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_manager.py"],false)
         // python.exe .\src\Klang\server\kws_manager.py
        
-        server_handler = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"])
+        server_handler = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"],false)
         // python.exe .\src\Klang\server\kws_server.py
 }
 
@@ -221,6 +225,7 @@ function install_lib(data){
     app.mainWin.loadFile('./dist/main/install_klang.html');        
              
     exec_out("powershell.exe",  ["pip3.exe install '" + root_path + "\\TA_Lib-0.4.24-cp310-cp310-win_amd64.whl'"],function(){
+        
         exec_out("powershell.exe",  ["pip3.exe install -r '" + root_path + "\\Klang\\requirements.txt'"],function(){
             exec_out("powershell.exe",["pip3.exe install '" + root_path + "\\Klang'"],function(){
                 if (data == "data"){
@@ -249,8 +254,19 @@ function python_check(){
     close_server();
 
     // 检查是否安装python3
-    run_script("where.exe",[" pip3.exe"],function( ){
+    run_script("where.exe",[" pip3.exe"],function(){
+        //没有发现pip3.exe
         app.mainWin.loadFile('./dist/main/python_check.html');
+    },function(data){
+        //发现了pip3.exe,检查路径有没有310, 不是python3.10版本提示安装3.10版本
+
+        //防止出现控制字符串
+        if ( data.indexOf('pip3.exe') != -1  &&  data.indexOf("310") ==  -1){
+           
+            app.mainWin.loadFile('./dist/main/python_check.html');
+        }
+
+
     }); 
 
     // 检查是否安装过Klang，如果没有，就安装依赖，安装Klang

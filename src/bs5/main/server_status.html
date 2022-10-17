@@ -57,6 +57,10 @@
         const result = await ipcRenderer.invoke('get_status', "")
         console.log(result);
         $("#server_status").html(result);
+
+        const result1 = await ipcRenderer.invoke('get_status_stderr', "")
+        console.log(result1);
+        $("#server_status_stderr").html(result1);
     
       })
     </script>

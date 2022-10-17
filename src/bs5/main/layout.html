@@ -202,7 +202,7 @@
 					<li><a href="index.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>主页</a></li>
 					<li><a href="https://klang.org.cn/online.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>公式</a></li>
 					<li><a href="https://klang.org.cn/kline.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>在线盘看</a></li>
-					<li><a href="./server_status.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>服务器状态</a></li>
+					<li><a href="./server_status.html" id="server_status_menu"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>服务器状态</a></li>
 					
 				  </ul>
 				</li>
@@ -657,7 +657,7 @@
 	<script src="js/pages/chat-popup.js"></script>
     <script src="../assets/icons/feather-icons/feather.min.js"></script>
 
-	<script src="../assets/vendor_components/apexcharts-bundle/dist/apexcharts.js"></script>
+	<!--script src="../assets/vendor_components/apexcharts-bundle/dist/apexcharts.js"></script-->
 	<script src="../assets/vendor_components/moment/min/moment.min.js"></script>
 	<script src="../assets/vendor_components/fullcalendar/fullcalendar.js"></script>
 	
@@ -675,6 +675,18 @@
 	<!-- electron  ipc script -->
 	<script src="js/renderer.js"></script>
 
+	<script>
+	$(document).ready(async function(){
+		function open_newWin(url) {
+			window.open(url,'_blank','frame=false,nodeIntegration=no');
+		}
+		var status = document.querySelector('#server_status_menu');
+		status.onclick = function(event){
+			console.log("click")
+			//open_newWin('./server_status.html'); 
+		}
+	})
+	</script>
 
 	{%block externjs%}
 	{%endblock%}
