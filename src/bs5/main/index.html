@@ -138,19 +138,19 @@
 						<div class="box-header with-border">
 						
 							<div class="demo-checkbox">
-								<input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-info" checked="">
+								<input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-info" checked="" v-model="sourcelist.volatility.select">
 								<label for="md_checkbox_23"><h4 class="box-title">横盘波动率</h4></label>					
 							</div>
 		  
 							
 						</div>
-						<div class="box-body">
+						<div class="box-body" v-if="sourcelist.volatility.select">
 							<div class="demo-radio-button">
-								<input name="group7" type="radio" id="radio_735" class="with-gap radio-col-warning">
+								<input name="group7" type="radio" id="radio_735" class="with-gap radio-col-warning" v-model="sourcelist.volatility.period" value="D">
 								<label for="radio_735">日线</label>
-								<input name="group7" type="radio" id="radio_732" class="with-gap radio-col-success">
+								<input name="group7" type="radio" id="radio_732" class="with-gap radio-col-success" v-model="sourcelist.volatility.period" value="W">
 								<label for="radio_732">周线</label>
-								<input name="group7" type="radio" id="radio_733" class="with-gap radio-col-info">
+								<input name="group7" type="radio" id="radio_733" class="with-gap radio-col-info" v-model="sourcelist.volatility.period" value="M">
 								<label for="radio_733">月线</label>
 
 							</div>
@@ -215,7 +215,7 @@
 								<label for="md_checkbox_code"><h4 class="box-title">显示源代码</h4></label>					
 							</div>
 		  
-							<textarea rows="6" class="form-control" v-if="showcode" v-model="sourcecode"></textarea>
+							<textarea rows="15" class="form-control" v-if="showcode" v-model="sourcecode"></textarea>
 						</div>
 						<div class="box-footer text-end">
 							<div class="spinner-border spinner-border-sm text-primary" role="status" v-if="work" style="margin-right:15px;">
@@ -303,6 +303,7 @@
 				  },
 				  sourcelist:{
 					macd:{
+						title: "### MACD 金叉计算公式 ###\n",
 						code:""+
 						"diff,dea,macd = MACD(PERIOD);\n"+
 						"ret = CROSS(diff,dea)\n"+
@@ -314,6 +315,7 @@
 						select:true,
 					},
 					turn:{
+						title:"###  换手率计算公式  ###\n",
 						code:""+
 						"retturn = 0\n"+
 						"if PERIODT > objturn:\n"+
@@ -324,6 +326,7 @@
 						objturn:"3",
 					},
 				   vol:{
+						title:"###  成交量放大公式  ###\n",
 						code:""+
 						"retvol = 0\n"+
 						"ma10vol = MA(PERIODV,10)\n"+
@@ -335,15 +338,18 @@
 						select:true,
 					},
 					volatility:{
+						title:"###  横盘震荡公式  ###\n",
 						code:""+
-						""+
-						""+
-						"",
+						"retvolatility = 0\n"+
+						"volati = TRANSVERSE(PERIOD_H,PERIOD_L,60)\n"+
+						"if volati< 30:\n"+
+						"   retvolatility = 1\n",
 						condition:"retvolatility",
-						period:"d",
+						period:"D",
 						select:true,
 					},
 					ma30:{
+						title:"###  上穿30日均线公式  ###\n",
 						code:""+
 						"retma30 = 0 \n"+
 						"ma30 = MA(PERIODMA,30)\n" +
@@ -383,43 +389,7 @@
 		  },
 		  methods: {
 
-			pageup:function(index){
-			  this.pages.curnum = index
-			  p = this.pages 
-			  start = (index-1)*p.pagesize
-			  end = index*p.pagesize
-			  if (start < 0) start = 0
-			  if (end < 1) end = 1
-			  if (end > this.result.length) end = this.result.length 
-			  this.pages.page = this.result.slice(start,end)
-						  
-			},
-			pagenext:function(){
-			  p = this.pages
-			  console.log(p.pagenums)
-			  if (this.pages.pagenums[4] < this.result.length / p.pagesize){
-				this.pages.curnum += 1
-				this.pageup(this.pages.curnum)
-				var nums=[]
-				this.pages.pagenums.map(function(index){
-				  nums.push(index+1)
-				})              
-				this.pages.pagenums = nums
-				
-			  }
-			},
-			pageprev:function(){
-			  p = this.pages
-			  if (this.pages.pagenums[4] > 5 ){
-				this.pages.curnum -= 1
-				var nums=[]
-				this.pages.pagenums.map(function(index){
-				  nums.push(index-1)
-				})              
-				this.pages.pagenums = nums
-				this.pageup(this.pages.curnum)
-			  }
-			},
+
 			openbrowser:function(event){
 				url = event.target.href
 				event.preventDefault();
@@ -433,7 +403,7 @@
 				
 				//macd
 				if (this.sourcelist.macd.select == true) {
-					code += "### MACD 金叉计算公式 ###\n";
+					code += this.sourcelist.macd.title;
 					macd_period = "PERIOD = " + this.sourcelist.macd.period  + "\n";
 					
 					code += macd_period + this.sourcelist.macd.code + "\n";
@@ -443,7 +413,7 @@
 
 				//turn 
 				if (this.sourcelist.turn.select == true) {
-					code +="###  换手率计算公式  ###\n";
+					code +=this.sourcelist.turn.title;
 					turn_period = "PERIODT = " + this.sourcelist.turn.period  + "\n";
 					code += "objturn = " + this.sourcelist.turn.objturn + "\n";
 					code += turn_period + this.sourcelist.turn.code + "\n";
@@ -452,16 +422,40 @@
 				
 				//vol
 				if (this.sourcelist.vol.select == true) {
-					code +="###  成交量放大公式  ###\n";
+					code +=this.sourcelist.vol.title;
 					vol_period = "PERIODV = " + this.sourcelist.vol.period  + "\n";
 					code += vol_period + this.sourcelist.vol.code + "\n";
 					condition += " and " + this.sourcelist.vol.condition
 				}
 
-				//vol
+				//volatility
+				if (this.sourcelist.volatility.select == true) {
+					code +=this.sourcelist.volatility.title;
+					if (this.sourcelist.volatility.period == "D"){
+						volatility_period = "PERIOD_H = H;\n"
+						volatility_period += "PERIOD_L = L;\n"
+					}
+
+					if (this.sourcelist.volatility.period == "W"){
+						volatility_period = "PERIOD_H = WH;\n"
+						volatility_period += "PERIOD_L = WL;\n"
+					}
+
+					
+					if (this.sourcelist.volatility.period == "M"){
+						volatility_period = "PERIOD_H = MH;\n"
+						volatility_period += "PERIOD_L = ML;\n"
+					}
+					
+					
+					code += volatility_period + this.sourcelist.volatility.code + "\n";
+					condition += " and " + this.sourcelist.volatility.condition
+				}
+
+				//ma30
 				if (this.sourcelist.ma30.select == true) {
 					
-					code +="###  上穿30日均线公式  ###\n";
+					code +=this.sourcelist.ma30.title;
 					ma30_period = "PERIODMA = " + this.sourcelist.ma30.period  + "\n";
 					code += ma30_period + this.sourcelist.ma30.code + "\n";
 					condition += " and " + this.sourcelist.ma30.condition

@@ -96,7 +96,12 @@ function exec_status (cmd,args){
         console.log(data.toString());
         
         date = new Date();
-        app.mainWin.webContents.send("status",date.toString() +": "+ data.toString()+"\n");
+        try {
+            app.mainWin.webContents.send("status",date.toString() +": "+ data.toString()+"\n");
+        } catch(e){
+
+        }
+        
         server_status += date.toString() +": "+ data.toString()+"\n";
     });
 
