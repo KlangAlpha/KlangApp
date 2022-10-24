@@ -15,6 +15,8 @@
 			<!-- /.box-header -->
 			<div class="box-body">
 
+				<a class="btn-sm btn-info"  id="install_lib">再次安装</a>
+
 				<pre class="ace-editor" id="editorJS" data-plugin="ace" data-mode="javascript" style="width: 100%;">
 
 				</pre>        	
@@ -46,6 +48,12 @@
 			
 
 			$("#editorJS").html(content);
+
+			$("#install_lib").click(function(e){
+				e.preventDefault();
+          		install_lib();
+				return ;
+       		})
 		 });
 
 	</script>

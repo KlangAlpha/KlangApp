@@ -12,16 +12,15 @@
 			  <div class="col-12" >
           <div class="box box-solid bg-danger">
             <div class="box-header">
-            <h4 class="box-title"><strong> 错误</strong></h4>
+            <h4 class="box-title"><strong> 提示</strong></h4>
             </div>
   
   
             <div class="box-body">
-             系统未检测到Python3，请先安装  ,如果出现错误，请查看<a href="https://forum.klang.org.cn/topic/76" > 安装帮助 </a></p>
+             如果您未安装python请按照提示安装，安装过程 出现错误，请查看<a href="https://forum.klang.org.cn/topic/76" > 安装帮助 </a></p>
              <font color=red>安装提示：</font></p>
-             <font color=red>1. 点击下载后安装python成功，但是再次回到这个界面请设置环境变量。</font></p>
-             <font color=red>2. 安装python成功，但是再次启动，请点击右键以管理员身份启动。</font></p>
-
+             <font color=red>点击下载后安装python 3.10 成功，但是仍不能访问python3.10，请再次安装并设置环境变量。（见第二步）</font></p>
+            
              一、下载 python </p>
              1、) 从本地<a class="btn-sm btn-info"   id="install_default_python">安装</a> <font color=red>*推荐</font></p>
              2、) 网络直接点击 <a class="btn-sm btn-info" id="download" href="https://www.python.org/ftp/python/3.10.7/python-3.10.7-amd64.exe">下载 </a> </p>
@@ -32,11 +31,10 @@
              --安装python3,注意勾选 添加到环境变量</p>
              <img src="../images/python_install.png".></p>
             
-             三、自动安装库Klang  server  </p>
-             --提示：安装完成后 重新启动 KlangApp 程序自动安装Klang server,如果一次安装不成功可以多启动几次。（每次要等待5分钟左右，安装程序较慢）  </p>
 
-             四、手动安装库 Klang server </p>
-             -- 可以按照第三步提示，关闭后启动自动安装。 尝试手动<a class="btn-sm btn-info"  href="./install_klang.html" id="install_lib">安装</a>
+
+
+            
             </div>
 
           </div>
@@ -94,9 +92,7 @@
         $("#install_default_python").click(function(){
           install_default_python_func();
         })
-        $("#install_lib").click(function(){
-          install_lib();
-        })
+
 
       })
     </script>

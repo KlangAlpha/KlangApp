@@ -3,6 +3,8 @@ const { ipcRenderer } = require('electron');
 
 const information = document.getElementById('download_info')
 
+
+
 function close_dialog(){  
     $(".sweet-container").hide();
 } 
@@ -54,4 +56,13 @@ ipcRenderer.on('status', (event, message) => {
  async function download_data_zip(){
     await ipcRenderer.invoke('download_data_zip',"");
  }
+ async function get_cookies(){
+   val = await ipcRenderer.invoke('get_cookies',"");
+   return val 
+}
+ipcRenderer.on('cookies', (event, message) => {
+   
+   $("#cookies").html(message);
+
+})
 //const result = await ipcRenderer.invoke('get_status', "")

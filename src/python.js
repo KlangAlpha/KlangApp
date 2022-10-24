@@ -67,8 +67,12 @@ function exec_out (cmd,args,callback){
     handle.stderr.on('data', (data) => {
         data = Buffer.from(iconv.decode(data,"GB2312"))
         console.log(data.toString());
-        
-        app.mainWin.webContents.send("log",data.toString()+"\n");
+        try {
+            app.mainWin.webContents.send("log",data.toString()+"\n");
+        }  catch(e){
+
+        }
+       
         
         
         
@@ -196,15 +200,58 @@ function instal_default_python(){
 
 var manager_handler;
 var server_handler;
+var server_handler1;
+var server_handler2;
+var server_handler3;
+var server_handler4;
+var server_handler5;
+var server_handler6;
 function start_server(){
+
 
         //启动 Klang服务器
         // python -u  无缓冲输出
-        manager_handler = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_manager.py"],false)
         // python.exe .\src\Klang\server\kws_manager.py
+        if (typeof manager_handler != "object"){
+            manager_handler = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_manager.py"],false)
+        }
+        
        
-        server_handler = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"],false)
+        if (typeof server_handler != "object"){
+             // python.exe .\src\Klang\server\kws_server.py
+            server_handler = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py", "canUpdate"],false)
+        }
+      
+        if (typeof server_handler1 != "object"){
+            // python.exe .\src\Klang\server\kws_server.py
+           server_handler1 = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"],false)
+       }
+
+       if (typeof server_handler2 != "object"){
+            // python.exe .\src\Klang\server\kws_server.py
+            server_handler2 = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"],false)
+       }
+
+       if (typeof server_handler3 != "object"){
         // python.exe .\src\Klang\server\kws_server.py
+        server_handler3 = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"],false)
+         }
+
+        if (typeof server_handler4 != "object"){
+         // python.exe .\src\Klang\server\kws_server.py
+            server_handler4 = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"],false)
+        }
+        if (typeof server_handler5 != "object"){
+            // python.exe .\src\Klang\server\kws_server.py
+               server_handler4 = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"],false)
+           }
+        if (typeof server_handler6 != "object"){
+            // python.exe .\src\Klang\server\kws_server.py
+               server_handler4 = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"],false)
+           }
+
+
+
 }
 
 function close_server(){
@@ -212,9 +259,17 @@ function close_server(){
 
     if (typeof manager_handler == "object"){
        
+        try {
+            manager_handler.kill()
+            server_handler.kill()
+            server_handler1.kill()
+            server_handler2.kill()
+            server_handler3.kill()
+            server_handler4.kill()
+            server_handler5.kill()
+            server_handler6.kill()
+        } catch{}
 
-        manager_handler.kill()
-        server_handler.kill()
         console.log("server kill")
     };
 
@@ -227,7 +282,7 @@ function install_lib(data){
     exec_out("powershell.exe",  ["pip3.exe install '" + root_path + "\\TA_Lib-0.4.24-cp310-cp310-win_amd64.whl'"],function(){
         
         exec_out("powershell.exe",  ["pip3.exe install -r '" + root_path + "\\Klang\\requirements.txt'"],function(){
-            exec_out("powershell.exe",["pip3.exe install '" + root_path + "\\Klang'"],function(){
+            exec_out("powershell.exe",["pip3.exe install '" + root_path + "\\Klang-0.9.6-py3-none-any.whl'"],function(){
                 if (data == "data"){
                     app.mainWin.webContents.send("log","Klang 安装完成,正在下载数据"+"\n");
                     console.log("Klang 安装完成，正在下载数据");
@@ -278,11 +333,14 @@ function python_check(){
 
 
     setTimeout(start_server,1000);
-
+    setTimeout(start_server,3000);
 }
+
+
 
 
 module.exports = {
     python_check,
     close_server,
+    start_server,
 };

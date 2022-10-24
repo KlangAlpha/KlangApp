@@ -2,8 +2,10 @@ const { app, BrowserWindow ,dialog,shell,ipcMain,Menu} = require('electron');
 const path = require('path');
 const child_process= require('child_process');
 const menu = require('./menu');
-const {python_check,close_server} = require('./python');
+const {python_check,close_server,start_server} = require('./python');
 const download_init = require('./download');
+
+const { session } = require('electron')
 
 
 function createWindow () {
@@ -22,6 +24,7 @@ function createWindow () {
     }
   })
 
+  win_event(win);
   app.mainWin = win;
   win.loadFile('./dist/main/index.html')
  
@@ -29,8 +32,17 @@ function createWindow () {
 
   download_init(win);
 
-  python_check();
+  // 先 检查 之前是否启动了 klang server
+  close_server();
+
+  // 关闭需要时间，因此1秒后启动
+  
+  setTimeout(start_server,1000);
+   // 3秒再次检查启动
+  setTimeout(start_server,3000);
  
+ 
+
 }
 
 app.whenReady().then(() => {
@@ -54,3 +66,30 @@ app.on('window-all-closed', () => {
 })
 
 
+ipcMain.handle('get_cookies',async (event, message) => {
+  const ses = session.fromPartition('persist:jqk')
+  ses.cookies.get({ url: 'http://q.10jqka.com.cn' })
+  .then((cookies) => {
+    console.log(cookies[0].value)
+    app.mainWin.webContents.send("cookies", cookies[0].value)
+  }).catch((error) => {
+    console.log(error)
+  })
+})
+
+// 控制新窗口
+function win_event(win){
+  win.webContents.on('new-window',function(event,url,fname,disposition,options){
+    let child ;
+    child = new BrowserWindow({
+      height:900,
+      width:1440,
+      webPreferences:{nodeIntegration:true},
+    });
+    win_event(child);
+    child.loadURL(url);
+    event.preventDefault();
+  })
+
+
+}
