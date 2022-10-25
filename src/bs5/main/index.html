@@ -249,7 +249,13 @@
 								<input type="checkbox" id="md_checkbox_code" class="chk-col-success" v-model="showcode">
 								<label for="md_checkbox_code"><h4 class="box-title">显示源代码</h4></label>		
 								<input type="checkbox" id="md_klang_server" class="chk-col-success" v-model="klangserver">
-								<label for="md_klang_server"><h4 class="box-title">远程运行</h4></label>				
+								<label for="md_klang_server"><h4 class="box-title">远程运行</h4></label>	
+
+								<input type="checkbox" id="md_klang_date" class="chk-col-success" v-model="klangdate">
+								<label for="md_klang_date" style="margin-left: 10px;margin-right: 5px; min-width: 40px;width:auto;" ><h4 class="box-title">复盘日期</h4></label>
+								<input class="filled-in chk-col-success"  type="text" v-if="klangdate" v-model="inputdate">	
+
+
 							</div>
 		  
 							<textarea rows="15" class="form-control" v-if="showcode" v-model="sourcecode"></textarea>
@@ -333,6 +339,7 @@
 				  work:0,
 				  toask:"",			
 				  result:[],
+				  
 
 				  pages:{
 					page:[],
@@ -428,6 +435,8 @@
 				sourcecode:"",
 				klangserver:false,
 				runcode:"",
+				klangdate:false,
+				inputdate:""
 
 
 
@@ -441,7 +450,9 @@
   
 		  async mounted () {
 
-			  this.make_code()
+			var today = new Date();
+			this.inputdate = today.toLocaleDateString().replaceAll("/","-");
+			this.make_code()
 		  },
 		  methods: {
 
@@ -457,6 +468,11 @@
 				var condition = "if True "
 
 				code += "PROGRESS(3);\n";
+
+				if (this.klangdate == true){
+
+					code += "date('2021-01-01','" + this.inputdate +"')\n";
+				}
 				//macd
 				if (this.sourcelist.macd.select == true) {
 					code += this.sourcelist.macd.title;
@@ -590,6 +606,14 @@
 			"sourcelist.ma30.objval":function(newval,old){
 				this.make_code()
 			},
+			klangdate:function(newval,old){
+				this.make_code()
+
+			},
+			inputdate:function(newval,old){
+				this.make_code()
+			},
+  
 			klangserver:function(newval,old){
 				if (this.klangserver == true){
 					iohost = "https://klang.org.cn:8099/user";
@@ -600,10 +624,8 @@
 
 				newconnect(iohost)
 				vue.$data.online = 1
-
-
 			}
-  
+
 		  }
 		}//VueApp
 		window.vue = Vue.createApp(VueApp).mount('#app')
