@@ -1,0 +1,169 @@
+
+{% extends 'layout.html' %}
+
+{% block main_body %}
+
+	  <div class="container-full" id="app">
+      <section class="content">
+        
+<div class="row" style="width:80%;margin:100px;" id="content">
+
+</div>
+
+<div class="row" style="width:80%;margin:100px;" id="gnblock" >
+  <div v-for="a,index in gn50list">
+   <div class="alert alert-primary" role="alert">
+      <a @click="getbkcode(a.href,index)">{{index+1}}、 {{a.name}} </a>
+   </div>
+
+   <div v-bind:id="'bk'+index">
+
+   </div>
+ </div> <!-- for -->
+</div>
+
+<div id="window2" class="row" style="width:80%;margin:100px;min-height:600px;">
+<iframe id="win2_iframe" src=""></iframe>
+<webview src="" id="win3_webview" partition="persist:jqk"></webview>
+</div>
+
+<div style="z-index: 9999; position:fixed; right: 50px; bottom: 50px;">
+<button class="btn btn-primary" @click="refresh">刷</button>
+</div>
+<div id="cookies" style="visibility: hidden"></div>
+    </section>
+</div>
+
+
+  {% endblock %}
+
+
+
+  {% block externjs %}
+
+  <script>
+
+
+
+  $(document).ready(function(){
+      var  win = window
+       
+
+    function tableClass(){
+      tables = document.getElementsByTagName('table')
+      for (i=0;i<tables.length;i++){
+          tables[i].className = 'table table-bordered'
+          tables[i].border = '1'
+      }
+    }
+
+    win.tableClass = tableClass
+
+    function getgn50(){
+
+      gn50data = $("#content table tr").slice(1,51)
+
+      for (i=0;i<50;i++){ 
+          var tr = gn50data[i]
+          var td = tr.cells[1]
+          var a = td.firstElementChild
+          vue.$data.gn50list.push({"href":a.href,"name":a.text})
+      
+      }
+      //setTimeout("getblock(0)",1500) 
+    }
+
+    function winiframe(href){
+        
+          $("#win3_webview").attr('src',href)
+    }     
+    var cookie_val = ""
+    async function getbkdata(code,index){    
+      jqkhost = "http://q.10jqka.com.cn"   
+      if ($("#cookies").html() != "") {
+        cookie_val = $("#cookies").html()
+        
+      }
+      axios.get(apihost+"/gn/detail/field/199112/order/desc/page/1/ajax/1/code/"+code,
+      {headers:{cook:"v="+cookie_val}}).then((response) => {
+
+        $('#bk'+index).html(response.data)
+
+        
+            tableClass();
+            setTimeout("tableClass()",1000)
+
+
+      })
+      .catch((error) => {
+
+      });
+
+
+    } 
+
+  async function getDatas(that){
+
+        response = await axios.get(apihost+"/funds/gnzjl/")
+
+        content = document.getElementById('content')
+        content.innerHTML = response.data
+
+        that.load = 1
+
+        that.$nextTick(function(){
+            tableClass()
+            getgn50()
+        });
+
+  }
+
+  var hostname = window.location.hostname
+  var host = window.location.host
+  if (hostname == ""){
+    hostname = "127.0.0.1"
+    apihost = "http://127.0.0.1:9999"
+  } else {
+    apihost = "http://"+host
+  }
+  apihost="http://examples.org.cn"
+  //apihost="http://192.168.123.169:9999"
+  const VueApp = {
+    data() {
+        return {
+            load:0,
+            result:{},
+            gn50list:[],
+        }
+    },
+
+    created() {
+        
+    },
+
+    mounted () {
+      var that = this
+        getDatas(that)
+  },
+    methods: {
+        refresh(e){
+          var that = this
+          getDatas(that)
+        },
+        async getbkcode(href,index){
+          var reg = /\d+\/$/
+          var code =  reg.exec(href)[0].replace('/','')
+          winiframe("http://q.10jqka.com.cn"+"/gn/detail/field/199112/order/desc/page/1/ajax/1/code/"+code)
+          getbkdata(code,index)
+          val = await get_cookies()
+          console.log("cookies.v",val)
+      }
+    }
+  }//VueApp
+  window.vue = Vue.createApp(VueApp).mount('#app')
+          
+  })
+</script>
+
+    
+    {% endblock %}

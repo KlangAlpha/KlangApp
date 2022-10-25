@@ -1,0 +1,244 @@
+{% extends 'layout.html' %}
+
+{% block main_body %}
+
+	  <div class="container-full" id="app">
+      <section class="content">
+        <div class="row" style="width:80%;margin:100px;" id="content">
+
+            <table>
+            <thead>
+                                    <tr role="head" class="tr_hover">  
+                                        <th style="width: 36px;">序号</th>
+                                        <th style="width: 66px;"><span sort="code" style="color: rgb(35, 113, 174); cursor: pointer;">基金代码</span></th>
+                                        <th width="130px" style="width: 171px;"><span>基金名称</span></th>
+                                        <th width="130px" style="width: 171px;"><span>公司名称</span></th>
+                                        <th style="width: 76px;"><span sort="SYENDDATE" style="color: rgb(35, 113, 174); cursor: pointer;">更新日期</span></th>
+                                        <th style="width: 54px;"><span sort="F003N_FUND33" style="cursor: pointer; color: rgb(35, 113, 174);">周收益</span></th>
+                                        <th style="width: 54px;"><span sort="F008" style="cursor: pointer; color: rgb(35, 113, 174);">月收益</span></th>
+                                        <th style="width: 55px;"><span sort="F009" style="cursor: pointer; color: rgb(35, 113, 174);" class="desc">季收益<b class="desc_item"></b></span></th>
+                                        <th style="width: 55px;"><span sort="F011" style="cursor: pointer; color: rgb(35, 113, 174);">年收益</span></th>
+                                        <th style="width: 71px;"><span sort="F015N_FUND33" style="cursor: pointer; color: rgb(35, 113, 174);">三年收益</span></th>
+                                        <th style="width: 63px;"><span sort="F012" style="cursor: pointer; color: rgb(35, 113, 174);">成立以来<br>收益率</span></th>
+                                        <th style="width: 63px;"><span  style="cursor: pointer; color: rgb(35, 113, 174);">当前价格</spn></th>
+                                        <th style="width: 63px;"><span  style="cursor: pointer; color: rgb(35, 113, 174);">今日涨跌</spn></th>
+                                    </tr>						
+                                </thead>
+            
+                <tbody>
+                <tr v-for="(e,index) in etflist">    
+                <td>{{index+1}}</td>
+                <td><a v-bind:href='"http://quote.eastmoney.com/"+e.code+".html"' target=_blank>{{e.code}}</a></td>
+                <td>{{e.name}}</td>
+                <td>{{e.orgname}}</td>
+                <td>{{e.SYENDDATE}}</td>
+                <td>
+                        <font color="#ef3432" v-if="e.F003N_FUND33 >= 0">{{e.F003N_FUND33}}%</font>
+                        <font color="#34ef32" v-if="e.F003N_FUND33 <0">{{e.F003N_FUND33}}%</font>
+                </td>
+                <td>
+                        <font color="#ef3432" v-if="e.F008 >= 0">{{e.F008}}%</font>
+                        <font color="#34ef32" v-if="e.F008 <0">{{e.F008}}%</font>
+                </td>
+                 <td>
+                        <font color="#ef3432" v-if="e.F009 >= 0">{{e.F009}}%</font>
+                        <font color="#34ef32" v-if="e.F009 <0">{{e.F009}}%</font>
+                </td>
+                 <td>
+                        <font color="#ef3432" v-if="e.F011 >=0">{{e.F011}}%</font>
+                        <font color="#34ef32" v-if="e.F011 <0">{{e.F011}}%</font>
+                </td>
+                 <td>
+                        <font color="#ef3432" v-if="e.F015N_FUND33 >= 0">{{e.F015N_FUND33}}%</font>
+                        <font color="#34ef32" v-if="e.F015N_FUND33 <0">{{e.F015N_FUND33}}%</font>
+                </td>
+                 <td>
+                        <font color="#ef3432" v-if="e.F012 >= 0">{{e.F012}}%</font>
+                        <font color="#34ef32" v-if="e.F012 <0">{{e.F012}}%</font>
+                </td>
+                <td>
+                    <span v-if="result[e.code]">{{result[e.code][1]}}</span>
+                </td> 
+                <td>
+                    <span v-if="result[e.code]">
+                        <a v-bind:href='"https://gu.qq.com/"+e.code' target=_blank ><font color="#ef3432" v-if="result[e.code][2] >= 0">{{result[e.code][2]}}%</font>
+                        <font color="#34ef32" v-if="result[e.code][2] < 0">{{result[e.code][2]}}%</font>
+                        </a>
+                    </span>
+                </tr>
+                </tbody>
+            
+            
+            </table>
+            
+            </div>
+            
+            <div class="row" style="width:80%;margin:100px;" id="gnblock" >
+              <div v-for="a,index in gn50list">
+               <div class="alert alert-primary" role="alert">
+                  <a @click="getbkcode(a.href,index)">{{index+1}}、 {{a.name}} </a>
+               </div>
+            
+               <div v-bind:id="'bk'+index">
+            
+               </div>
+             </div> <!-- for -->
+            </div>
+            
+            <div id="window2" class="row" style="width:80%;margin:100px;min-height:600px;">
+            <iframe id="win2_iframe" src=""></iframe>
+            </div>
+            
+            <div style="z-index: 9999; position:fixed; right: 50px; bottom: 50px;">
+            <button class="btn btn-primary" @click="refresh">刷</button>
+            </div>
+            
+            
+
+    </section>
+</div>
+
+
+  {% endblock %}
+
+
+
+  {% block externjs %}
+
+  <script>
+    var  win = window
+
+     
+    function formatData(code,datas){
+         var name = datas[0]
+         var close1 = datas[2]
+         var close = datas[3]
+
+         var rise = 100 * (close - close1) / close1
+         if (String(parseFloat(rise)) != "NaN"){ //NaN 是无法直接比较的
+             rise = parseFloat(rise).toFixed(2)
+         } else {
+             rise = 0.000
+         } 
+         close = parseFloat(close).toFixed(2) 
+         vue.$data.result[code]=[name,close,rise]
+         vue.$data.result[code.slice(2,8)]=[name,close,rise]
+         console.log(name,close,rise)
+    }
+    
+
+   async function getstocks(that){
+     stocklist = that.stocklist
+     for (i=0 ; i < stocklist.length;i+=100){
+         params = stocklist.slice(i,i+100).join()
+         response = await axios.get(apihost+"/?list="+params)
+
+         var hq_str_sys_auth;
+
+         eval(response.data)
+
+         // 服务器返回错误，上面的定义就会在eval时候被赋值
+         if (hq_str_sys_auth=="FAILED"){
+             return
+         }
+         console.log(response)
+     }
+     stocklist.forEach(function(item){
+
+               eval('win.'+item +'= hq_str_'+item)
+               var datas= win[item].split(',')
+
+               formatData(item,datas)
+
+             })
+      that.load = 1
+
+      that.$nextTick(function(){
+         tableClass()
+      });
+
+     setTimeout("tableClass()",1000 );  
+
+ }
+
+ function tostocklist(that){
+     stocklist = []
+     for (i=0;i<that.etflist.length;i++){
+         code = that.etflist[i]['code']
+         
+         if (code > 500000){
+             stocklist.push('sh'+code)
+         } else {
+
+             stocklist.push('sz'+code)
+         }
+     }
+     return stocklist
+ }
+    
+
+    function tableClass(){
+      tables = document.getElementsByTagName('table')
+      for (i=0;i<tables.length;i++){
+         tables[i].className = 'table table-bordered'
+         tables[i].border = '1'
+      }
+   }
+
+   async function getDatas(that){
+
+         response = await axios.get(apihost+"/data/Net/info/ETF_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html")
+
+         content = document.getElementById('content')
+         console.log(response.data)
+         vue.$data.etflist = response.data
+   
+         that.load = 1
+
+
+         tableClass()
+         setTimeout("tableClass()",1000 );  
+         that.stocklist = tostocklist(that)
+         getstocks(that)
+   }
+
+var hostname = window.location.hostname
+var host = window.location.host
+  if (hostname == ""){
+     hostname = "127.0.0.1"
+     apihost = "http://127.0.0.1:9999"
+  } else {
+     apihost = "http://"+host
+  }
+  apihost = "http://examples.org.cn"
+
+   const VueApp = {
+     data() {
+         return {
+             load:0,
+             result:{},
+             etflist:[],
+             stocklist:[],
+         }
+     },
+ 
+     created() {
+         
+     },
+
+     mounted () {
+        var that = this
+         getDatas(that)
+    },
+     methods: {
+         refresh(e){
+           var that = this
+           getstocks(that)
+         }
+     }
+   }//VueApp
+   window.vue = Vue.createApp(VueApp).mount('#app')
+
+</script>
+
+  {% endblock %}
