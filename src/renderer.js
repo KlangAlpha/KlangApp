@@ -1,9 +1,25 @@
 
 const { ipcRenderer } = require('electron');
+const {getCurrentWebContents } = require("@electron/remote")
+const {FindInPage} = require("electron-find/src/index.js")
 
 const information = document.getElementById('download_info')
 
 
+let findInPage = new FindInPage(getCurrentWebContents(),{
+   preload:true,
+   offsetTop:6,
+   offsetRight:10
+})
+
+ipcRenderer.on('onfind',(e,args)=>{
+   console.log("get ctrl+f")
+   console.log(getCurrentWebContents)
+   //findInPage.update()
+
+   findInPage.openFindWindow()
+   
+})
 
 function close_dialog(){  
     $(".sweet-container").hide();
@@ -65,4 +81,6 @@ ipcRenderer.on('cookies', (event, message) => {
    $("#cookies").html(message);
 
 })
+
+
 //const result = await ipcRenderer.invoke('get_status', "")

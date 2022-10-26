@@ -1,4 +1,4 @@
-const { app, BrowserWindow ,dialog,shell,ipcMain,Menu} = require('electron');
+const { app, BrowserWindow ,dialog,shell,ipcMain,Menu,globalShortcut} = require('electron');
 const path = require('path');
 const child_process= require('child_process');
 const menu = require('./menu');
@@ -6,6 +6,7 @@ const {python_check,close_server,start_server} = require('./python');
 const download_init = require('./download');
 
 const { session } = require('electron')
+require("@electron/remote/main").initialize()
 
 
 function createWindow () {
@@ -24,11 +25,25 @@ function createWindow () {
     }
   })
 
+  require("@electron/remote/main").enable(win.webContents)
   win_event(win);
   app.mainWin = win;
   win.loadFile('./dist/main/index.html')
  
+  win.on("focus",()=>{
+    globalShortcut.register("CommandOrControl+F",function(){
+     
+      try{
+       
+        win.webContents.send('onfind','')
+      } catch {}
+           
+    })
+  })
 
+  win.on("blue",()=>{
+    globalShortcut.unregister("CommandOrControl+F")
+  })
 
   download_init(win);
 
@@ -55,9 +70,12 @@ app.whenReady().then(() => {
       createWindow()
     }
   })
+
 })
 
 app.on('window-all-closed', () => {
+
+  globalShortcut.unregister("CommandOrControl+F")
 
   close_server()
   if (process.platform !== 'darwin') {
