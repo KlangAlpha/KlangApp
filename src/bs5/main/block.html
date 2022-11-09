@@ -77,29 +77,20 @@
         
           $("#win3_webview").attr('src',href)
     }     
-    var cookie_val = ""
-    async function getbkdata(code,index){    
-      jqkhost = "http://q.10jqka.com.cn"   
-      if ($("#cookies").html() != "") {
-        cookie_val = $("#cookies").html()
-        
-      }
-      axios.get(apihost+"/gn/detail/field/199112/order/desc/page/1/ajax/1/code/"+code,
-      {headers:{cook:"v="+cookie_val}}).then((response) => {
+    
+    async function getbkdata(code,index,cookie_val){    
 
-        $('#bk'+index).html(response.data)
+        axios.get(apihost+"/gn/detail/field/199112/order/desc/page/1/ajax/1/code/"+code,
+          {headers:{cook:"v="+cookie_val}}).then((response) => {
 
-        
-            tableClass();
-            setTimeout("tableClass()",1000)
+          $('#bk'+index).html(response.data)
+          tableClass();
+          setTimeout("tableClass()",1000)
 
-
-      })
-      .catch((error) => {
-
-      });
-
-
+        })
+        .catch((error) => {
+          $("#cookies").html("")
+        });
     } 
 
   async function getDatas(that){
@@ -154,9 +145,11 @@
           var reg = /\d+\/$/
           var code =  reg.exec(href)[0].replace('/','')
           winiframe("http://q.10jqka.com.cn"+"/gn/detail/field/199112/order/desc/page/1/ajax/1/code/"+code)
-          getbkdata(code,index)
-          val = await get_cookies()
-          console.log("cookies.v",val)
+         
+          ipcRenderer.invoke('get_cookies',"").then(result=>{  
+            getbkdata(code,index,result)
+          });
+
       }
     }
   }//VueApp

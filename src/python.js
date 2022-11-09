@@ -189,12 +189,12 @@ ipcMain.handle('download_data_zip',async (event, message) => {
 
 function download_data_zip(){
 
-    exec_status("powershell.exe",["python.exe -u '" + root_path + "\\Klang\\tools\\download.py'"],true)
+    exec_status("powershell.exe",[root_path +"\\Klang\\dist\\dowload.exe"],true)
 }
 
 
 function instal_default_python(){
-    
+    return 
     exec_status("powershell.exe",  ['Start-Process',"'" + root_path + "\\python-3.10.7-amd64.exe'"],false)
 }
 
@@ -206,6 +206,7 @@ var server_handler3;
 var server_handler4;
 var server_handler5;
 var server_handler6;
+
 function start_server(){
 
 
@@ -213,42 +214,46 @@ function start_server(){
         // python -u  无缓冲输出
         // python.exe .\src\Klang\server\kws_manager.py
         if (typeof manager_handler != "object"){
-            manager_handler = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_manager.py"],false)
+           // manager_handler = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_manager.py"],false)
+           manager_handler = exec_status(root_path +"\\Klang\\dist\\kws_manager.exe",  [],false)
         }
         
        
         if (typeof server_handler != "object"){
              // python.exe .\src\Klang\server\kws_server.py
-            server_handler = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py", "canUpdate"],false)
+            server_handler = exec_status(root_path +"\\Klang\\dist\\kws_server.exe",  ["canUpdate"],false)
         }
       
         if (typeof server_handler1 != "object"){
             // python.exe .\src\Klang\server\kws_server.py
-           server_handler1 = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"],false)
+           server_handler1 = exec_status(root_path +"\\Klang\\dist\\kws_server.exe",  [],false)
        }
 
        if (typeof server_handler2 != "object"){
             // python.exe .\src\Klang\server\kws_server.py
-            server_handler2 = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"],false)
+            server_handler2 = exec_status(root_path +"\\Klang\\dist\\kws_server.exe",  [],false)
        }
 
        if (typeof server_handler3 != "object"){
         // python.exe .\src\Klang\server\kws_server.py
-        server_handler3 = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"],false)
+        server_handler3 = exec_status(root_path +"\\Klang\\dist\\kws_server.exe",  [],false)
          }
 
         if (typeof server_handler4 != "object"){
          // python.exe .\src\Klang\server\kws_server.py
-            server_handler4 = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"],false)
+            server_handler4 = exec_status(root_path +"\\Klang\\dist\\kws_server.exe",  [],false)
         }
         if (typeof server_handler5 != "object"){
             // python.exe .\src\Klang\server\kws_server.py
-               server_handler4 = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"],false)
+               server_handler4 = exec_status(root_path +"\\Klang\\dist\\kws_server.exe",  [],false)
            }
         if (typeof server_handler6 != "object"){
             // python.exe .\src\Klang\server\kws_server.py
-               server_handler4 = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_server.py"],false)
+               server_handler4 = exec_status(root_path +"\\Klang\\dist\\kws_server.exe",  [],false)
            }
+
+           
+
 
 
 
@@ -268,6 +273,7 @@ function close_server(){
             server_handler4.kill()
             server_handler5.kill()
             server_handler6.kill()
+
         } catch{}
 
         console.log("server kill")
@@ -277,6 +283,7 @@ function close_server(){
 
 function install_lib(data){
 
+    return 
     app.mainWin.loadFile('./dist/main/install_klang.html');        
              
     exec_out("powershell.exe",  ["pip3.exe install '" + root_path + "\\TA_Lib-0.4.24-cp310-cp310-win_amd64.whl'"],function(){
@@ -308,6 +315,7 @@ function python_check(){
     // 先 检查 之前是否启动了 klang server
     close_server();
 
+    /*
     // 检查是否安装python3
     run_script("where.exe",[" pip3.exe"],function(){
         //没有发现pip3.exe
@@ -329,7 +337,7 @@ function python_check(){
 
         install_lib("data")
            
-    });
+    });*/
 
 
     setTimeout(start_server,1000);

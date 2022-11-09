@@ -94,12 +94,12 @@ const template = [
   {
     role: 'help',
     submenu: [
-      {
+      /*{
         label: 'python检查',
         click: async () => {
           app.mainWin.loadFile("./dist/main/python_check.html");
         }
-      },
+      },*/
       {
         label: '关于Klang',
         click: async () => {

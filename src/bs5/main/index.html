@@ -264,7 +264,7 @@
 							<div class="spinner-border spinner-border-sm text-primary" role="status" v-if="work" style="margin-right:15px;">
 								<span class="visually-hidden">.</span>
 							</div>
-							<span>{{runcode}}</span>
+							<span>{{countdown}}</span></span><span v-if="runcode"> - {{runcode}}</span>
 							<a  class="btn btn-danger" style="margin-left:5px;" id="run">
 							  运行
 							</a>
@@ -330,7 +330,7 @@
 		
 		
 	    iohost = "http://127.0.0.1:9088/user"
-	    //iohost = "http://192.168.123.169:9088/user"
+	   // iohost = "http://192.168.1.18:9088/user"
 	   
 		const VueApp = {
 		  data() {
@@ -354,13 +354,13 @@
 						"diff,dea,macd = MACD(PERIOD);\n"+
 						"ret = CROSS(diff,dea)\n"+
  						"retmacd = False ; \n"+
-						"if ret or ret[-1] or ret[-2] :\n"+
+						"if ret or ret[1] or ret[2] :\n"+
  						"       retmacd = True\n",
 						condition:"retmacd",
 						period:"C",
 						select:true,
 						dea:false,
-						skyrelay:false,
+						
 					},
 					macdrelay:{
 						title: "### MACD 空中加油计算公式 ###\n",
@@ -389,7 +389,7 @@
 						title:"###  成交量放大公式  ###\n",
 						code:""+
 						"retvol = 0\n"+
-						"ma10vol = MA(PERIODV,10)\n"+
+						"ma10vol = MA(PERIODV[1],10)\n"+
 						"ma10vol = ma10vol * 2\n"+
 						"if V >= ma10vol:\n"+
 						"   retvol = 1",
@@ -414,7 +414,7 @@
 						"retma30 = 0 \n"+
 						"ma30 = MA(PERIODMA,ma30objval)\n" +
 						"ret = CROSS(PERIODMA,ma30)\n"+
-						"if ret or ret[-1]:\n" + 
+						"if ret or ret[1]:\n" + 
 						" retma30 = 1",
 						condition:"retma30",
 						period:"C",
@@ -436,6 +436,7 @@
 				klangserver:false,
 				runcode:"",
 				klangdate:false,
+				countdown:"",
 				inputdate:""
 
 
@@ -577,10 +578,19 @@
 			"sourcelist.macd.period":function(newval,old){
 				this.make_code()
 			},
+			"sourcelist.volatility.select":function(newval,old){
+
+				this.make_code()
+			},
+			"sourcelist.volatility.period":function(newval,old){
+
+				this.make_code()
+			},			
 			"sourcelist.turn.select":function(newval,old){
 
 				this.make_code()
 			},
+
 			"sourcelist.turn.period":function(newval,old){
 				this.make_code()
 			},
@@ -638,6 +648,35 @@
 		var restart_server = document.querySelector('#restart_server');
 		var stop_server = document.querySelector('#stop_server');
 
+		var minute,second;// 分 秒
+ 
+		function start_count()//开始
+		{
+			minute=second=0;//初始化
+			int=setInterval(timer_count,1000);
+		}
+
+		function timer_count()//计时
+		{
+			second = second+1;
+
+
+			if(second>=60)
+			{
+				second=0;
+				minute=minute+1;
+			}
+
+
+			vue.$data.countdown = minute +'分'+second+'秒';
+
+		}
+
+		function stop_count()//暂停
+		{
+			window.clearInterval(int);
+		}
+
 
 		var socket;
 		function newconnect(host){
@@ -649,6 +688,7 @@
 				console.log("u_done",data)
 				vue.$data.work = 0
 				vue.$data.runcode = ""
+				stop_count();
 
 			})
 
@@ -714,6 +754,7 @@
 				  }
   
 				  send_task();
+				  start_count();
 				 
 		}
 		updatedata.onclick = function(event){

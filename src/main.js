@@ -86,13 +86,10 @@ app.on('window-all-closed', () => {
 
 ipcMain.handle('get_cookies',async (event, message) => {
   const ses = session.fromPartition('persist:jqk')
-  ses.cookies.get({ url: 'http://q.10jqka.com.cn' })
-  .then((cookies) => {
-    console.log(cookies[0].value)
-    app.mainWin.webContents.send("cookies", cookies[0].value)
-  }).catch((error) => {
-    console.log(error)
-  })
+  const cookies  = await ses.cookies.get({ url: 'http://q.10jqka.com.cn' })
+
+  return cookies[0].value
+  
 })
 
 // 控制新窗口

@@ -37,6 +37,7 @@ async function main (){
     .pipe(gulp.dest('./dist/main/'));
 }
 
+
 gulp.task("default",async function(){
 
   assets();
@@ -44,6 +45,7 @@ gulp.task("default",async function(){
   main();
   base();
   templates();
+ 
 })
 
 
