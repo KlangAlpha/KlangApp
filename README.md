@@ -50,3 +50,12 @@ npm run make
 ```
 
 注意这个需要依赖 wix set tools 工具，需要自己安装
+
+Linux 下只保留了deb，如果需要生成rpm，把package.json里面deb改成 rpm
+```
+
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+```
