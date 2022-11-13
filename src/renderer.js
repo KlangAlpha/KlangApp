@@ -62,13 +62,7 @@ ipcRenderer.on('status', (event, message) => {
     await ipcRenderer.invoke('stop_server',"");
  }
 
- async function install_default_python_func(){
-    await ipcRenderer.invoke('install_default_python',"");
- }
 
- async function install_lib(){
-    await ipcRenderer.invoke('install_lib',"");
- }
  async function download_data_zip(){
     await ipcRenderer.invoke('download_data_zip',"");
  }
@@ -83,4 +77,3 @@ ipcRenderer.on('cookies', (event, message) => {
 })
 
 
-//const result = await ipcRenderer.invoke('get_status', "")
