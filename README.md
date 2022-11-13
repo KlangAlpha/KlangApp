@@ -3,6 +3,8 @@ Klang 桌面版本
 ```
 git clone  https://github.com/KlangAlpha/KlangApp
 cd KlangApp
+git submodule init
+git submodule update
 ```
 
 ### 一、Windows 系统需要安装nodejs
