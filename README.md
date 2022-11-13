@@ -42,7 +42,7 @@ npm run start:win
 
 * python 和Klang依赖的安装在 App里已经实现
 
-### 四、制作可执行程序和安装包
+### 五、制作可执行程序和安装包
 ```
 npm run make
 ```
