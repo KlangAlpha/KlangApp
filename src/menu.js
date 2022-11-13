@@ -23,6 +23,26 @@ const template = [
     label: 'File',
     submenu: [
       {
+        label:"打开配置文件",
+        click:async()=>{
+          filename = await dialog.showOpenDialog({ properties: ['openFile'],
+          filters: [{ name: 'Json', extensions: ['json'] }]
+          })
+          console.log(filename.filePaths)
+
+        }
+      },
+      {
+        label:"保存配置文件",
+        click:async()=>{
+          filename = await dialog.showSaveDialog({ properties: ['openFile'],
+          filters: [{ name: 'Json', extensions: ['json'] }]
+          })
+          console.log(filename.filePath)
+          app.mainWin.webContents.send('savefile',filename.filePath)
+        }
+      },
+      {
         label: '主页',
         click: async () => {
           app.mainWin.loadFile("./dist/main/index.html");
@@ -94,12 +114,6 @@ const template = [
   {
     role: 'help',
     submenu: [
-      /*{
-        label: 'python检查',
-        click: async () => {
-          app.mainWin.loadFile("./dist/main/python_check.html");
-        }
-      },*/
       {
         label: '关于Klang',
         click: async () => {

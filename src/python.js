@@ -178,7 +178,7 @@ ipcMain.handle('download_data_zip',async (event, message) => {
 
 function download_data_zip(){
 
-    exec_status("powershell.exe",[root_path +"\\Klang\\dist\\dowload.exe"],true)
+    exec_status(root_path +"\\Klang\\dist\\dowload.exe",[],true)
 }
 
 
