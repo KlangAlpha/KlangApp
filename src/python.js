@@ -8,6 +8,7 @@ const logger = new console.Console({ stdout: process.stdout, stderr: process.std
 var path = require("path")
 root_path = path.join(__dirname)
 
+const isWin = process.platform === 'win32'
 
 // This function will output the lines from the script 
 // and will return the full combined output
@@ -21,7 +22,10 @@ function run_script(command, args, errcallback,successcallback) {
 
     child.stdout.on('data', (data) => {
         //Here is the output
-        data = Buffer.from(iconv.decode(data,"GB2312"))
+        if (isWin){
+            data = Buffer.from(iconv.decode(data,"GB2312"))
+        }
+            
         console.log(data.toString())
  
         if (typeof successcallback === 'function')
@@ -33,9 +37,6 @@ function run_script(command, args, errcallback,successcallback) {
         // Return some data to the renderer process with the mainprocess-response ID
         //mainWindow.webContents.send('mainprocess-response', data);
         //Here is the output from the command
-
-        utf8buf = Buffer.from(iconv.decode(data,"GB2312"))
-        //logger.info("logger:",utf8buf.toString())
 
         if (typeof errcallback === 'function')
             errcallback( );
@@ -54,14 +55,19 @@ function exec_out (cmd,args,callback){
 
 
      handle.stdout.on('data', (data) => {
-        data = Buffer.from(iconv.decode(data,"GB2312"))
+        
+        if (isWin){
+            data = Buffer.from(iconv.decode(data,"GB2312"))
+        }
         console.log(data.toString());
         
         app.mainWin.webContents.send("log",data.toString()+"\n");
     });
 
     handle.stderr.on('data', (data) => {
-        data = Buffer.from(iconv.decode(data,"GB2312"))
+        if (isWin){
+            data = Buffer.from(iconv.decode(data,"GB2312"))
+        }
         console.log(data.toString());
         try {
             app.mainWin.webContents.send("log",data.toString()+"\n");
@@ -95,7 +101,9 @@ function exec_status (cmd,args,isshell){
    
      handle.stdout.on('data', (data) => {
 
-        data = Buffer.from(iconv.decode(data,"GB2312"))
+        if (isWin){
+            data = Buffer.from(iconv.decode(data,"GB2312"))
+        }
         console.log(data.toString());
         
         date = new Date();
@@ -111,7 +119,9 @@ function exec_status (cmd,args,isshell){
     handle.stderr.on('data', (data) => {
 
         
-        data = Buffer.from(iconv.decode(data,"GB2312"))
+        if (isWin){
+            data = Buffer.from(iconv.decode(data,"GB2312"))
+        }
         console.log(data.toString());
         date = new Date();
         try {
@@ -137,33 +147,19 @@ ipcMain.handle('get_status_stderr', async (event, message) => {
 })
   
 ipcMain.handle('reset_server',async (event, message) => {
-        
-    run_script("wmic", ["process where \"commandline like '%kws%' and name like '%python%' \" get processid"],function(){},function(data){
-        data = data.toString()
-        pids = data.split('\n')
-        for (i=1;i<pids.length;i++){
-            run_script("taskkill",["/F /pid " +  pids[i]],function(){},function(){})  
-        }
-            
-      
-    })
+    
+    close_server()
+
     setTimeout(start_server,1000);
+
+    setTimeout(start_server,3000);
     
     return 'ok'
 })
 
 
 ipcMain.handle('stop_server',async (event, message) => {
-        
-    run_script("wmic", ["process where \"commandline like '%kws%' and name like '%python%' \" get processid"],function(){},function(data){
-        data = data.toString()
-        pids = data.split('\n')
-        for (i=1;i<pids.length;i++){
-            run_script("taskkill",["/F /pid " +  pids[i]],function(){},function(){})  
-        }
-            
-    })
-  
+ 
     close_server()
     return 'ok'
 })
@@ -177,8 +173,12 @@ ipcMain.handle('download_data_zip',async (event, message) => {
 })
 
 function download_data_zip(){
-
-    exec_status(root_path +"\\Klang\\dist\\dowload.exe",[],true)
+    if(isWin){
+        exec_status(root_path +"\\Klang\\dist\\dowload.exe",[],true)
+    } else {
+        exec_status(root_path +"/Klang/dist/dowload",[],true)
+    }
+   
 }
 
 
@@ -196,52 +196,67 @@ var server_handler6;
 function start_server(){
 
 
+    if(isWin){
+        manager_path = "\\Klang\\dist\\kws_manager.exe"
+        server_path =  "\\Klang\\dist\\kws_server.exe"
+    }else {
+        manager_path = "/Klang/dist/kws_manager"
+        server_path =  "/Klang/dist/kws_server"
+    }
         //启动 Klang服务器
         // python -u  无缓冲输出
         // python.exe .\src\Klang\server\kws_manager.py
         if (typeof manager_handler != "object"){
-           // manager_handler = exec_status("python.exe",  ["-u", root_path + "\\Klang\\server\\kws_manager.py"],false)
-           manager_handler = exec_status(root_path +"\\Klang\\dist\\kws_manager.exe",  [],false)
+           
+           manager_handler = exec_status(root_path + manager_path,  [],false)
         }
         
        
         if (typeof server_handler != "object"){
              // python.exe .\src\Klang\server\kws_server.py
-            server_handler = exec_status(root_path +"\\Klang\\dist\\kws_server.exe",  ["canUpdate"],false)
+            server_handler = exec_status(root_path + server_path,  ["canUpdate"],false)
         }
       
         if (typeof server_handler1 != "object"){
             // python.exe .\src\Klang\server\kws_server.py
-           server_handler1 = exec_status(root_path +"\\Klang\\dist\\kws_server.exe",  [],false)
+           server_handler1 = exec_status(root_path + server_path,  [],false)
        }
 
        if (typeof server_handler2 != "object"){
             // python.exe .\src\Klang\server\kws_server.py
-            server_handler2 = exec_status(root_path +"\\Klang\\dist\\kws_server.exe",  [],false)
+            server_handler2 = exec_status(root_path + server_path,  [],false)
        }
 
        if (typeof server_handler3 != "object"){
         // python.exe .\src\Klang\server\kws_server.py
-        server_handler3 = exec_status(root_path +"\\Klang\\dist\\kws_server.exe",  [],false)
+        server_handler3 = exec_status(root_path + server_path,  [],false)
          }
 
         if (typeof server_handler4 != "object"){
          // python.exe .\src\Klang\server\kws_server.py
-            server_handler4 = exec_status(root_path +"\\Klang\\dist\\kws_server.exe",  [],false)
+            server_handler4 = exec_status(root_path + server_path,  [],false)
         }
         if (typeof server_handler5 != "object"){
             // python.exe .\src\Klang\server\kws_server.py
-               server_handler4 = exec_status(root_path +"\\Klang\\dist\\kws_server.exe",  [],false)
+               server_handler4 = exec_status(root_path + server_path,  [],false)
            }
         if (typeof server_handler6 != "object"){
             // python.exe .\src\Klang\server\kws_server.py
-               server_handler4 = exec_status(root_path +"\\Klang\\dist\\kws_server.exe",  [],false)
+               server_handler4 = exec_status(root_path + server_path,  [],false)
            }
 
 }
 
 function close_server(){
     console.log("close_server")
+    if (isWin){
+        run_script('taskkill  -F /IM "kws_manager.exe"',[],true,function(){},function(){})
+        run_script('taskkill  -F /IM "kws_server.exe"',[],true,function(){},function(){})
+    } else {
+        run_script('killall  -9 "kws_manager"',[],true,function(){},function(){})
+        run_script('killall  -9 "kws_server"',[],true,function(){},function(){})
+    }
+    
 
     if (typeof manager_handler == "object"){
        
@@ -259,6 +274,15 @@ function close_server(){
 
         console.log("server kill")
     };
+    manager_handler = ""
+    server_handler  = ""
+    server_handler1 = ""
+    server_handler2 = ""
+    server_handler3 = ""
+    server_handler4 = ""
+    server_handler5 = ""
+    server_handler6 = ""
+
 
 }
 
@@ -270,7 +294,6 @@ function python_check(){
 
     // 先 检查 之前是否启动了 klang server
     close_server();
-
 
     setTimeout(start_server,1000);
     setTimeout(start_server,3000);
