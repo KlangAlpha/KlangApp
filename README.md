@@ -14,8 +14,21 @@ cd KlangApp
 npm install
 ```
 
+### 三、 编译Klang
+```
+cd src/Klang
+pip3  install -r requirements.txt
+pip3 install pyinstaller
+pyinstaller kws_manager.spec
+pyinstaller kws_server.spec
+pyinstaller -F tool/dowonload.py
+cd ../../
+```
 
-### 三、 启动
+### 四、 启动
+
+确保你在 KlangApp目录
+
 Mac Linux
 ```
 npm run gulp
