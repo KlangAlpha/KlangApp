@@ -16,10 +16,15 @@ npm install
 
 
 ### 三、 启动
-
+Mac Linux
 ```
 npm run gulp
 npm run start
+```
+Windows系统
+```
+npm run gulp
+npm run start:win
 ```
 
 * python 和Klang依赖的安装在 App里已经实现
