@@ -1,4 +1,5 @@
 const { app, BrowserWindow ,dialog,shell,ipcMain,Menu} = require('electron')
+const fs = require('fs');
 
 const isMac = process.platform === 'darwin'
 
@@ -29,7 +30,12 @@ const template = [
           filters: [{ name: 'Json', extensions: ['json'] }]
           })
           console.log(filename.filePaths)
-
+          if (filename.filePaths.length > 0 ){
+                 
+                data = fs.readFileSync(filename.filePaths[0])
+                app.confs = data.toString()
+                app.mainWin.webContents.send('confs',app.confs)
+            }
         }
       },
       {
