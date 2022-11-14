@@ -2,7 +2,7 @@ const { app, BrowserWindow ,dialog,shell,ipcMain,Menu,globalShortcut} = require(
 const path = require('path');
 const child_process= require('child_process');
 const menu = require('./menu');
-const {python_check,close_server,start_server} = require('./python');
+const {close_server,start_server} = require('./python');
 const download_init = require('./download');
 
 const { session } = require('electron')

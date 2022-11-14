@@ -207,7 +207,6 @@ function start_server(){
         // python -u  无缓冲输出
         // python.exe .\src\Klang\server\kws_manager.py
         if (typeof manager_handler != "object"){
-           
            manager_handler = exec_status(root_path + manager_path,  [],false)
         }
         
@@ -289,21 +288,7 @@ function close_server(){
 
 
 
-function python_check(){
-
-
-    // 先 检查 之前是否启动了 klang server
-    close_server();
-
-    setTimeout(start_server,1000);
-    setTimeout(start_server,3000);
-}
-
-
-
-
 module.exports = {
-    python_check,
     close_server,
     start_server,
 };

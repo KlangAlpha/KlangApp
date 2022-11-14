@@ -9,6 +9,7 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
+    "dmg": "electron-installer-dmg out/klangapp-darwin-x64/klangapp.app out/klangapp",
     "gulp": "gulp"
   },
   "author": "",
@@ -19,15 +20,16 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.67",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.67",
     "@electron-forge/maker-zip": "^6.0.0-beta.67",
-    "electron": "^21.0.0"
+    "electron": "^21.2.3"
   },
   "dependencies": {
     "@electron-forge/maker-wix": "^6.0.0-beta.67",
+    "@electron/remote": "^2.0.8",
     "electron-find": "^1.0.7",
+    "electron-installer-dmg": "^4.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "gulp": "^4.0.2",
     "gulp-swig": "^0.9.1",
-    "@electron/remote": "^2.0.8",
     "iconv-lite": "^0.6.3"
   },
   "config": {
