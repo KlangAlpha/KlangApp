@@ -41,8 +41,11 @@ const template = [
       {
         label:"保存配置文件",
         click:async()=>{
+          user_home = app.getPath('home')
+
           filename = await dialog.showSaveDialog({ properties: ['openFile'],
-          filters: [{ name: 'Json', extensions: ['json'] }]
+          filters: [{ name: 'Json', extensions: ['json'] }],
+          defaultPath: user_home + "/.klang/config.json"
           })
           console.log(filename.filePath)
           app.mainWin.webContents.send('savefile',filename.filePath)

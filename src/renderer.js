@@ -76,4 +76,24 @@ ipcRenderer.on('cookies', (event, message) => {
 
 })
 
+ipcRenderer.on('savefile', async (event, message) => {
+ 
+   confs = {filename:message}
+   confs.sourcelist = vue.sourcelist
+   confs.runconfs  = vue.runconfs
+   await ipcRenderer.invoke('saveconfs',JSON.stringify(confs));
+})
+
+
+ipcRenderer.on('confs', async (event, message) => {
+   confs = JSON.parse(message)
+   vue.sourcelist = confs.sourcelist
+    vue.runconfs = confs.runconfs
+})
+
+async function getdefaultconfs (){
+   console.log("getdefaultconfs")
+   await ipcRenderer.invoke('getdefaultconfs',"");
+   // main.js 处理后会回调 confs
+}
 

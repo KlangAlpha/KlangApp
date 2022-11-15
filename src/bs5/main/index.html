@@ -124,7 +124,7 @@
 		  
 							
 						</div>
-						<div class="box-body" v-if="sourcelist.macd.select">
+						<div class="box-body" v-if="sourcelist.macdrelay.select">
 							<div class="demo-radio-button">
 								<input name="group5_2" type="radio" id="radio_535_2" class="with-gap radio-col-warning" v-model="sourcelist.macdrelay.period" value="C">
 								<label for="radio_535_2">日线</label>
@@ -246,19 +246,19 @@
 						<div class="box-header with-border">
 						
 							<div class="demo-checkbox">
-								<input type="checkbox" id="md_checkbox_code" class="chk-col-success" v-model="showcode">
+								<input type="checkbox" id="md_checkbox_code" class="chk-col-success" v-model="runconfs.showcode">
 								<label for="md_checkbox_code"><h4 class="box-title">显示源代码</h4></label>		
-								<input type="checkbox" id="md_klang_server" class="chk-col-success" v-model="klangserver">
+								<input type="checkbox" id="md_klang_server" class="chk-col-success" v-model="runconfs.klangserver">
 								<label for="md_klang_server"><h4 class="box-title">远程运行</h4></label>	
 
-								<input type="checkbox" id="md_klang_date" class="chk-col-success" v-model="klangdate">
+								<input type="checkbox" id="md_klang_date" class="chk-col-success" v-model="runconfs.klangdate">
 								<label for="md_klang_date" style="margin-left: 10px;margin-right: 5px; min-width: 40px;width:auto;" ><h4 class="box-title">复盘日期</h4></label>
-								<input class="filled-in chk-col-success"  type="text" v-if="klangdate" v-model="inputdate">	
+								<input class="filled-in chk-col-success"  type="text" v-if="runconfs.klangdate" v-model="runconfs.inputdate">	
 
 
 							</div>
 		  
-							<textarea rows="15" class="form-control" v-if="showcode" v-model="sourcecode"></textarea>
+							<textarea rows="15" class="form-control" v-if="runconfs.showcode" v-model="sourcecode"></textarea>
 						</div>
 						<div class="box-footer text-end">
 							<div class="spinner-border spinner-border-sm text-primary" role="status" v-if="work" style="margin-right:15px;">
@@ -285,7 +285,7 @@
 						<th scope="col">流通值(亿)</th>
 						<th scope="col">板块</th>
 						<th scope="col">概念板块</th>
-						<th scope="col">筹码</th>
+						
 						</tr>
 						</thead>
 						 <tbody>
@@ -297,7 +297,7 @@
 							<td>{{item.hqltsz}}</td>
 							<td>{{item.tdxbk}}</td>
 							<td>{{item.tdxgn}}</td>
-							<td>{{item.chouma}}</td>
+							
 							</tr>
 							</tbody>
 						</table> 
@@ -330,7 +330,7 @@
 		
 		
 	    iohost = "http://127.0.0.1:9088/user"
-	   // iohost = "http://192.168.1.18:9088/user"
+	    //iohost = "http://192.168.1.20:9088/user"
 	   
 		const VueApp = {
 		  data() {
@@ -340,7 +340,6 @@
 				  toask:"",			
 				  result:[],
 				  
-
 				  pages:{
 					page:[],
 					curnum:0,
@@ -422,31 +421,21 @@
 						objval:30,
 					}
 				},
-				  info:{code:"",name:"",
-					stocklength:0,
-					curlength:0,
-					cost:0,
-					value:0,
-					per:0,
-					tempcost:0,
-					alert:0,
-				  },
-				showcode:false,
+				runconfs:{
+					showcode:false,
+					klangserver:false,
+					klangdate:false,
+					inputdate:""
+				},				
 				sourcecode:"",
-				klangserver:false,
 				runcode:"",
-				klangdate:false,
 				countdown:"",
-				inputdate:""
-
-
-
 				 
 			  }
 		  },
 	  
-		  created() {
-			  
+		 async created() {
+			await getdefaultconfs();
 		  },
   
 		  async mounted () {
@@ -774,6 +763,7 @@
 			stop_server_func(); //renderer.js
 		}
 		  
+
   
   </script>
  

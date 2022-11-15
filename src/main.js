@@ -4,7 +4,7 @@ const child_process= require('child_process');
 const menu = require('./menu');
 const {close_server,start_server} = require('./python');
 const download_init = require('./download');
-
+const fs = require('fs');
 const { session } = require('electron')
 require("@electron/remote/main").initialize()
 
@@ -90,6 +90,24 @@ ipcMain.handle('get_cookies',async (event, message) => {
 
   return cookies[0].value
   
+})
+
+ipcMain.handle("saveconfs",async(event,message) =>{
+  confs = JSON.parse(message)
+  filename = confs.filename
+  delete confs['filename']
+  fs.writeFileSync(filename,JSON.stringify(confs))
+})
+
+ipcMain.handle("getdefaultconfs",async(event,message) =>{
+  user_home = app.getPath('home')
+  console.log(user_home)
+  try {
+    data = fs.readFileSync(user_home + "/.klang/config.json")
+    app.confs = data.toString()
+    app.mainWin.webContents.send('confs',app.confs)
+  } catch{}
+
 })
 
 // 控制新窗口
