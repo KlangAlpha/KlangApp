@@ -41,7 +41,8 @@ function createWindow () {
     })
   })
 
-  win.on("blue",()=>{
+  win.on("blur",()=>{
+    
     globalShortcut.unregister("CommandOrControl+F")
   })
 

@@ -70,7 +70,12 @@
 													<span class="icon-Book-open fs-24"><i class="fa fa-calendar-minus-o fs-16" aria-hidden="true"></i>
 												</span></div>
 											</td>
-											<td class="fw-600 fs-16 min-w-150 text-center" >动态数据</td>
+											<td class="fw-600 fs-16 min-w-150 text-center" v-if="server_count" >
+												<span class="badge badge-pill badge-warning" >{{server_count}}</span> 服务器
+											</td>
+											<td class="fw-600 fs-16 min-w-150 text-center" v-else>
+												<span class="badge badge-pill badge-warning" >等待启动..</span>
+											</td>
 											<td class="fw-600 fs-16 min-w-150 text-center"><i class="fa fa-fw fa-circle text-light fs-12" style="visibility: hidden"></i> 股票数据</td>
 											<td class="fw-600 fs-16 min-w-150 text-center" id="updatedata"><a class="btn btn-flat btn-info">更新数据</a></td>
 											<td class="fw-400 fs-16 min-w-150 text-center" id="downloaddata"><a class="btn btn-flat btn-warning">覆盖全部数据</a></td>
@@ -345,7 +350,7 @@
 				  work:0,
 				  toask:"",			
 				  result:[],
-				  
+				  server_count:0,
 				  pages:{
 					page:[],
 					curnum:0,
@@ -639,7 +644,7 @@
 				}
 
 				newconnect(iohost)
-				vue.$data.online = 1
+				vue.$data.online = 0
 			}
 
 		  }
@@ -681,9 +686,17 @@
 		var socket;
 		function newconnect(host){
 			socket = io(host)
+			socket.on("connect",(data)=>{
+				console.log("connect")
+				vue.$data.online = 1
+			})
 			socket.on("disconnect",(data)=>{
+				console.log("disconnect")
+				vue.$data.online = 0
+				vue.$data.server_count = 0
 				socket.connect()
 			})
+
 			socket.on("u_done",data=>{
 				console.log("u_done",data)
 				vue.$data.work = 0
@@ -693,7 +706,9 @@
 			})
 
 			socket.on("u_info",data=>{
-				console.log("u_info",data)
+				console.log("u_info",data,data.servers.length)
+				vue.$data.server_count = data.servers.length
+
 			})
 
 			socket.on("u_ret",data=>{
@@ -750,6 +765,11 @@
 					vue.$data.toask.state = 1
 					return 
 				  }
+
+				  if (vue.$data.server_count == 0){
+					alert("等待服务器启动,请稍后")
+					return 
+				  }
   
 				  send_task();
 				  start_count();
@@ -798,7 +818,7 @@
 
 			newconnect(iohost)
 			
-			vue.$data.online = 1
+			
 			vue.$data.plugin_show = 1
 
 			var run = document.querySelector('#run');
@@ -819,7 +839,7 @@
 				download_data_zip();
 			}
 			reconnect.onclick = function(event){
-
+				newconnect(iohost)
 			}
 			restart_server.onclick = function(event){
 				reset_server(); //renderer.js
