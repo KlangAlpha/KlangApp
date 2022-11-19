@@ -1,6 +1,6 @@
 {
   "name": "klangapp",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "klang desktop",
   "main": "src/main.js",
   "scripts": {
