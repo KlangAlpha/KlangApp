@@ -1,0 +1,55 @@
+{
+    "id":"rise_top",
+    "name":"涨停",
+    "description":"涨停算法",
+    "author":"asmcos",
+    "url":"https://www.klang.org.cn",
+    "html":["<div class='box'>",
+          "<div class='box-header with-border'>",
+            "<div class='demo-checkbox'>",
+								"<input type='checkbox' id='md_checkbox_25{0}' class='filled-in chk-col-danger' checked='' v-model='sourcelist.{0}.select'>",
+								"<label for='md_checkbox_25{0}'><h4 class='box-title'>涨停</h4></label>",
+								"<label style='margin-left: 10px;margin-right: 5px; min-width: 40px;width:auto;'>上涨幅度</label>",	
+								"<input class='filled-in chk-col-success'  type='number' name='number' v-model='sourcelist.{0}.objval'>",					
+							"</div>",
+		  
+							
+						"</div>",
+						"<div class='box-body' v-if='sourcelist.{0}.select'>",
+							"<div class='demo-radio-button'>",
+								"<input name='group9{0}' type='radio' id='radio_935{0}' class='with-gap radio-col-warning' v-model='sourcelist.{0}.period' value='C'>",
+								"<label for='radio_935{0}'>日线</label>",
+								"<input name='group9{0}' type='radio' id='radio_932{0}' class='with-gap radio-col-success' v-model='sourcelist.{0}.period' value='WC'>",
+								"<label for='radio_932{0}'>周线</label>",
+								"<input name='group9{0}' type='radio' id='radio_933{0}' class='with-gap radio-col-info' v-model='sourcelist.{0}.period' value='MC'>",
+								"<label for='radio_933{0}'>月线</label>",
+
+                                "</div>",
+                                "</div>",
+             "</div>"],
+    "sourceconf":{
+        "title":"###  涨停公式  ###\n",
+        "code":["ret{0} = 0 \n",
+            "ret = (PERIOD_RISE - PERIOD_RISE[1]) / PERIOD_RISE[1]\n",
+            "ret = ret * 100 \n",
+            "if ret > riseobjval:\n",
+            "   ret{0} = 1\n"],
+        "condition":"ret{0}",
+        "period":"C",
+        "select":true,
+        "objval":9.9
+    },
+    "watch":["peroid","select","objval"],
+    "exec_code":[
+        "if (that.sourcelist.{0}.select == true) {",
+            " code += that.sourcelist.{0}.title;",
+            " code += 'PERIOD_RISE = ' + that.sourcelist.{0}.period  + ';';",
+            " code += 'riseobjval = ' + that.sourcelist.{0}.objval  +';';",
+            " code += that.sourcelist.{0}.code ;",
+            "condition += ' and ' + that.sourcelist.{0}.condition",
+        "}"
+    ]
+
+
+    
+}

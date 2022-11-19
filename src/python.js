@@ -50,45 +50,6 @@ function run_script(command, args, errcallback,successcallback) {
 
 }
 
-function exec_out (cmd,args,callback){
-    const handle = child_process.spawn(cmd, args,{env: {NODE_ENV: 'production'},shell:true});
-
-
-     handle.stdout.on('data', (data) => {
-        
-        if (isWin){
-            data = Buffer.from(iconv.decode(data,"GB2312"))
-        }
-        console.log(data.toString());
-        
-        app.mainWin.webContents.send("log",data.toString()+"\n");
-    });
-
-    handle.stderr.on('data', (data) => {
-        if (isWin){
-            data = Buffer.from(iconv.decode(data,"GB2312"))
-        }
-        console.log(data.toString());
-        try {
-            app.mainWin.webContents.send("log",data.toString()+"\n");
-        }  catch(e){
-
-        }
-       
-        
-        
-        
-    });
-    handle.on("exit",(code)=>{
-        console.log(code)
-        if (code == 1) return 
-        if (typeof callback === 'function'){
-            callback()
-        }
-            
-    })
-
-}
 
 var server_status = ""
 var server_status_stderr=""
@@ -174,9 +135,9 @@ ipcMain.handle('download_data_zip',async (event, message) => {
 
 function download_data_zip(){
     if(isWin){
-        exec_status(root_path +"\\Klang\\dist\\dowload.exe",[],true)
+        exec_status(root_path +"\\Klang\\dist\\dowload.exe",[],false)
     } else {
-        exec_status(root_path +"/Klang/dist/dowload",[],true)
+        exec_status(root_path +"/Klang/dist/dowload",[],false)
     }
    
 }

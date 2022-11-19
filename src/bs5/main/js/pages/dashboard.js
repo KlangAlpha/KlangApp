@@ -50,9 +50,10 @@ $(function () {
 		  labels: ["Progress"]
 		};
 
+		/*
 		var chart = new ApexCharts(document.querySelector("#revenue5"), options);
 
-		chart.render();
+		chart.render();*/
 	
 	
 }); // End of use strict

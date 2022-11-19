@@ -241,6 +241,11 @@
 					</div>
 
 
+					 <template id="plugin_html" v-if="plugin_show">
+						
+					 </template>
+					
+					 
 
 					<div class="box">
 						<div class="box-header with-border">
@@ -321,7 +326,8 @@
 
  <script>
    $(document).ready(async function(){
-	 
+	  
+	   await getplugin();
    })
  </script>
 
@@ -430,6 +436,8 @@
 				sourcecode:"",
 				runcode:"",
 				countdown:"",
+				exec_code:[],
+				plugin_show:false
 				 
 			  }
 		  },
@@ -539,6 +547,15 @@
 					condition += " and " + this.sourcelist.ma30.condition
 				}
 
+				var that = this;
+
+				exec_codes = Object.values(this.exec_code)
+				
+				exec_codes.forEach(function(item){
+						
+					eval(item)
+				})
+
 				condition += ":\n" +
 				"      DISPLAY(C);\n";
 				
@@ -627,15 +644,9 @@
 
 		  }
 		}//VueApp
-		window.vue = Vue.createApp(VueApp).mount('#app')
+	
+		
   
-  
-		var run = document.querySelector('#run');
-		var reconnect = document.querySelector('#connect');
-		var updatedata = document.querySelector('#updatedata');
-		var downloaddata = document.querySelector('#downloaddata');
-		var restart_server = document.querySelector('#restart_server');
-		var stop_server = document.querySelector('#stop_server');
 
 		var minute,second;// 分 秒
  
@@ -695,11 +706,11 @@
 					hqltsz = data.hqltsz.toFixed(2)
 					tdxbk = data.tdxbk
 					tdxgn = data.tdxgn
-					chouma = data.chouma
+					
 
 					value = data.value
 						
-					vue.$data.result.push({name:data.name,code:code,value:value,hqltsz:hqltsz,tdxbk:tdxbk,tdxgn:tdxgn,chouma:chouma})
+					vue.$data.result.push({name:data.name,code:code,value:value,hqltsz:hqltsz,tdxbk:tdxbk,tdxgn:tdxgn})
 								
 				}  
 
@@ -715,10 +726,7 @@
 
 		} //new connect
 
-		newconnect(iohost)
-		 
-		
-		vue.$data.online = 1
+
    
 
 
@@ -731,7 +739,8 @@
 				socket.emit("uexec_event",{content:vue.$data.sourcecode,loop:true});
 		}
 
-		run.onclick = function (event) {
+		
+		function run_exec (event) {
 				  
 			
 				  console.log(vue.$data.online)
@@ -746,25 +755,83 @@
 				  start_count();
 				 
 		}
-		updatedata.onclick = function(event){
-			socket.emit("u_cmd_event",{content:"UPDATEALL"});
-		}
-  
-		downloaddata.onclick = function(event){
-			download_data_zip();
-		}
-		reconnect.onclick = function(event){
+
+		function appinit(message){
+
+			plugindata = JSON.parse(message)
+
+
+
+			// 1. html
+			htmls = []
+			htmls.push(plugindata.html.join("").format(plugindata.id))
+
+			htmls.forEach(function(item){
+				document.querySelector('#plugin_html').innerHTML += item
+			})
+	
+
+			window.app  = Vue.createApp(VueApp)
+			window.vue  =  app.mount('#app')
+
+			// 2. sourcelist 
+			sourceconf = plugindata.sourceconf
+			sourceconf.code = sourceconf.code.join("").format(plugindata.id)
+			sourceconf.condition = sourceconf.condition.format(plugindata.id)
+
+			vue.$data.sourcelist[plugindata.id] = sourceconf
+			console.log(vue.sourcelist)
+			console.log(htmls)
+			// 3. code
+			exec_code = plugindata.exec_code.join("").format(plugindata.id)
+
+			// 4. watch
+			plugindata.watch.forEach(function(name){
+				vue.$watch("sourcelist." + plugindata.id + "." + name,function(newVal,oldVal){
+					vue.make_code()
+				})
+			})
+			
+
+			vue.$data.exec_code[plugindata.id] = exec_code
+
+
+			newconnect(iohost)
+			
+			vue.$data.online = 1
+			vue.$data.plugin_show = 1
+
+			var run = document.querySelector('#run');
+			var reconnect = document.querySelector('#connect');
+			var updatedata = document.querySelector('#updatedata');
+			var downloaddata = document.querySelector('#downloaddata');
+			var restart_server = document.querySelector('#restart_server');
+			var stop_server = document.querySelector('#stop_server');
+
+			run.onclick = run_exec
+			
+			
+			updatedata.onclick = function(event){
+				socket.emit("u_cmd_event",{content:"UPDATEALL"});
+			}
+	
+			downloaddata.onclick = function(event){
+				download_data_zip();
+			}
+			reconnect.onclick = function(event){
+
+			}
+			restart_server.onclick = function(event){
+				reset_server(); //renderer.js
+			}
+			stop_server.onclick = function(event){
+				stop_server_func(); //renderer.js
+			}
+			
 
 		}
-		restart_server.onclick = function(event){
-			reset_server(); //renderer.js
-		}
-		stop_server.onclick = function(event){
-			stop_server_func(); //renderer.js
-		}
-		  
 
-  
+		window.appinit = appinit
   </script>
  
  {% endblock %}

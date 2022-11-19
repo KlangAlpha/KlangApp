@@ -87,8 +87,27 @@ ipcRenderer.on('savefile', async (event, message) => {
 
 ipcRenderer.on('confs', async (event, message) => {
    confs = JSON.parse(message)
-   vue.sourcelist = confs.sourcelist
-    vue.runconfs = confs.runconfs
+   //不能直接赋值，防止覆盖插件部分。
+   keys = Object.keys(confs.sourcelist)
+   keys.forEach(function(k){
+      vue.sourcelist[k] = confs.sourcelist[k]
+   })
+   
+   vue.runconfs = confs.runconfs
+})
+
+String.prototype.format = function() {
+   var formatted = this;
+   for( var arg in arguments ) {
+       formatted = formatted.replaceAll("{" + arg + "}", arguments[arg]);
+   }
+   return formatted;
+};
+
+ipcRenderer.on('plugindata', async (event, message) => {
+   
+   appinit(message)
+  
 })
 
 async function getdefaultconfs (){
@@ -97,3 +116,9 @@ async function getdefaultconfs (){
    // main.js 处理后会回调 confs
 }
 
+
+async function getplugin (){
+   
+   await ipcRenderer.invoke('getplugin',"");
+   // main.js 处理后会回调 confs
+}

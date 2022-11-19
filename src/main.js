@@ -99,14 +99,30 @@ ipcMain.handle("saveconfs",async(event,message) =>{
   fs.writeFileSync(filename,JSON.stringify(confs))
 })
 
+
+
+
 ipcMain.handle("getdefaultconfs",async(event,message) =>{
   user_home = app.getPath('home')
+
+
   console.log(user_home)
   try {
     data = fs.readFileSync(user_home + "/.klang/config.json")
     app.confs = data.toString()
     app.mainWin.webContents.send('confs',app.confs)
   } catch{}
+
+})
+
+ipcMain.handle("getplugin",async(event,message) =>{
+  root_path = path.join(__dirname)
+
+  try{
+    plugindata = fs.readFileSync(root_path + "/plugin_default.json").toString()
+    app.mainWin.webContents.send('plugindata',plugindata)
+  } catch{}
+  
 
 })
 
