@@ -24,6 +24,12 @@ const template = [
     label: 'File',
     submenu: [
       {
+        label: '主页',
+        click: async () => {
+          app.mainWin.loadFile("./dist/main/index.html");
+        }
+      },
+      {
         label:"打开配置文件",
         click:async()=>{
           filename = await dialog.showOpenDialog({ properties: ['openFile'],
@@ -52,9 +58,9 @@ const template = [
         }
       },
       {
-        label: '主页',
-        click: async () => {
-          app.mainWin.loadFile("./dist/main/index.html");
+        label:"插件设置",
+        click:async()=>{
+          app.mainWin.loadFile("./dist/main/plugin_set.html");
         }
       },
       isMac ? { role: 'close' } : { role: 'quit' }

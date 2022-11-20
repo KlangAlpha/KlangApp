@@ -158,11 +158,11 @@ function start_server(){
 
 
     if(isWin){
-        manager_path = "\\Klang\\dist\\kws_manager.exe"
-        server_path =  "\\Klang\\dist\\kws_server.exe"
+        manager_path = "\\Klang\\dist\\kws_manager\\kws_manager.exe"
+        server_path =  "\\Klang\\dist\\kws_server\\kws_server.exe"
     }else {
-        manager_path = "/Klang/dist/kws_manager"
-        server_path =  "/Klang/dist/kws_server"
+        manager_path = "/Klang/dist/kws_manager/kws_manager"
+        server_path =  "/Klang/dist/kws_server/kws_server"
     }
         //启动 Klang服务器
         // python -u  无缓冲输出

@@ -454,7 +454,7 @@
 		  async mounted () {
 
 			var today = new Date();
-			this.inputdate = today.toLocaleDateString().replaceAll("/","-");
+			this.runconfs.inputdate = today.toLocaleDateString().replaceAll("/","-");
 			this.make_code()
 		  },
 		  methods: {
@@ -472,9 +472,9 @@
 
 				code += "PROGRESS(3);\n";
 
-				if (this.klangdate == true){
+				if (this.runconfs.klangdate == true){
 
-					code += "date('2021-01-01','" + this.inputdate +"')\n";
+					code += "date('2021-01-01','" + this.runconfs.inputdate +"')\n";
 				}
 				//macd
 				if (this.sourcelist.macd.select == true) {
@@ -627,16 +627,18 @@
 			"sourcelist.ma30.objval":function(newval,old){
 				this.make_code()
 			},
-			klangdate:function(newval,old){
+			"runconfs.klangdate":function(newval,old){
+				var today = new Date();
+			    this.runconfs.inputdate = today.toLocaleDateString().replaceAll("/","-");
 				this.make_code()
 
 			},
-			inputdate:function(newval,old){
+			"runconfs.inputdate":function(newval,old){
 				this.make_code()
 			},
   
-			klangserver:function(newval,old){
-				if (this.klangserver == true){
+			"runconfs.klangserver":function(newval,old){
+				if (this.runconfs.klangserver == true){
 					iohost = "https://klang.org.cn:8099/user";
 
 				} else {
