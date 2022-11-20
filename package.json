@@ -39,6 +39,7 @@
         {
           "name": "@electron-forge/maker-wix",
           "config": {
+            "upgradeCode":"57e14074-6883-11ed-b3ff-fb7d7833cd9a",
             "language": 1033,
             "manufacturer": "Klang.org.cn"
           }
