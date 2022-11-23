@@ -85,6 +85,16 @@ ipcRenderer.on('savefile', async (event, message) => {
 })
 
 
+
+
+//index.html 调用
+async function getdefaultconfs (){
+   console.log("getdefaultconfs")
+   await ipcRenderer.invoke('getdefaultconfs',"");
+   // main.js 处理后会回调 confs
+}
+
+//  main 相应 getdefaultconfs的调用，返回数据
 ipcRenderer.on('confs', async (event, message) => {
    confs = JSON.parse(message)
    //不能直接赋值，防止覆盖插件部分。
@@ -96,6 +106,15 @@ ipcRenderer.on('confs', async (event, message) => {
    vue.runconfs = confs.runconfs
 })
 
+
+//index.html 调用
+async function getplugin (){
+   
+   await ipcRenderer.invoke('getplugin',"");
+   // main.js 处理后会回调 confs
+}
+
+//appinit函数调用
 String.prototype.format = function() {
    var formatted = this;
    for( var arg in arguments ) {
@@ -104,21 +123,15 @@ String.prototype.format = function() {
    return formatted;
 };
 
+//main.js 相应 getplugin 的调用，返回数据
 ipcRenderer.on('plugindata', async (event, message) => {
    
    appinit(message)
   
 })
 
-async function getdefaultconfs (){
-   console.log("getdefaultconfs")
-   await ipcRenderer.invoke('getdefaultconfs',"");
-   // main.js 处理后会回调 confs
-}
-
-
-async function getplugin (){
-   
-   await ipcRenderer.invoke('getplugin',"");
-   // main.js 处理后会回调 confs
+//plugin_set.html 发起调用
+async function downplugin(url){
+   await ipcRenderer.invoke('plugin_download',url);
+   //plugins.js 处理
 }

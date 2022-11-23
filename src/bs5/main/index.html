@@ -365,7 +365,9 @@
 						"ret = CROSS(diff,dea)\n"+
  						"retmacd = False ; \n"+
 						"if ret or ret[1] or ret[2] :\n"+
- 						"       retmacd = True\n",
+ 						"       retmacd = True\n"+
+						"if retmacd == False:\n"+
+						"    kstop",
 						condition:"retmacd",
 						period:"C",
 						select:true,
@@ -379,7 +381,9 @@
 	
  						"retmacdrelay = False ; \n"+
 						"if dea > 0 and diff > dea and diff > diff[1] and diff[1] < diff[2] and diff[2] < diff[3]:\n"+
- 						"       retmacdrelay = True\n",
+ 						"       retmacdrelay = True\n"+
+						"if retmacdrelay == False:\n"+
+						"    kstop",
 						condition:"retmacdrelay",
 						period:"C",
 						select:false,
@@ -389,7 +393,9 @@
 						code:""+
 						"retturn = 0\n"+
 						"if PERIODT > objturn or  PERIODT[1] > objturn or  PERIODT[2] > objturn:\n"+
-						"  retturn = 1\n",
+						"  retturn = 1\n"+
+						"if retturn == 0:"+
+						" kstop",
 						condition:"retturn",
 						period:"MT",
 						select:true,
@@ -401,8 +407,8 @@
 						"retvol = 0\n"+
 						"ma10vol = MA(PERIODV[1],10)\n"+
 						"ma10vol = ma10vol * 2\n"+
-						"if V >= ma10vol:\n"+
-						"   retvol = 1",
+						"if V < ma10vol:\n"+
+						"   kstop",
 						condition:"retvol",
 						period:"V",
 						select:true,
@@ -412,8 +418,8 @@
 						code:""+
 						"retvolatility = 0\n"+
 						"volati = TRANSVERSE(PERIOD_H,PERIOD_L,60)\n"+
-						"if volati< 30:\n"+
-						"   retvolatility = 1\n",
+						"if volati >= 30:\n"+
+						"   kstop\n",
 						condition:"retvolatility",
 						period:"D",
 						select:true,
@@ -425,7 +431,9 @@
 						"ma30 = MA(PERIODMA,ma30objval)\n" +
 						"ret = CROSS(PERIODMA,ma30)\n"+
 						"if ret or ret[1]:\n" + 
-						" retma30 = 1",
+						" retma30 = 1\n"+
+						"if retma30==0:\n"+
+						"   kstop",
 						condition:"retma30",
 						period:"C",
 						select:true,
@@ -561,10 +569,10 @@
 					eval(item)
 				})
 
-				condition += ":\n" +
-				"      DISPLAY(C);\n";
+				//condition += ":\n" +
+				code += "\nDISPLAY(C);\n";
 				
-				this.sourcecode = code + condition 
+				this.sourcecode = code 
 
 			}
 		  },
@@ -802,8 +810,7 @@
 			sourceconf.condition = sourceconf.condition.format(plugindata.id)
 
 			vue.$data.sourcelist[plugindata.id] = sourceconf
-			console.log(vue.sourcelist)
-			console.log(htmls)
+
 			// 3. code
 			exec_code = plugindata.exec_code.join("").format(plugindata.id)
 

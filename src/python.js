@@ -77,6 +77,7 @@ function exec_status (cmd,args,isshell){
         server_status += date.toString() +": "+ data.toString()+"\n";
     });
 
+    // python 进度条库使用stderr作为输入出。
     handle.stderr.on('data', (data) => {
 
         

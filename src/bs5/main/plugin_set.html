@@ -8,7 +8,21 @@
     <section class="content">
         <div class="row">
             <div class="col-10">
-   
+                <div class="box">
+                    <div class="box-body">
+                        <h4 class="box-title">插件管理页面</h4>
+                        <div class="form-group">
+                            <label class="form-label"><a class=".text-info"><i class="mdi mdi-home-outline"></i> </a> - 输入plugin GitHub项目地址, 例如: 
+                                <a href="https://github.com/KlangAlpha/plugins">https://github.com/KlangAlpha/plugins</a>
+                            </label>                  
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="" v-model="plugurl">
+                                <span class="input-group-text" @click="plugindown"><i class="ti-import"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
 
 
@@ -140,6 +154,7 @@
             data() {
                 return {
                     pluginArray:0,
+                    plugurl:""
 
                 }
             },
@@ -156,8 +171,12 @@
                 configs(e){
 
                 },
-                async getall_plugin(href,index){
-
+                async plugindown(){
+                    //renderer.js
+                    if (this.plugurl == "" ){
+                        alert("请输入plugin github地址")
+                    }
+                    downplugin(this.plugurl)
                 }
             }
         }//VueApp

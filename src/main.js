@@ -4,10 +4,12 @@ const child_process= require('child_process');
 const menu = require('./menu');
 const {close_server,start_server} = require('./python');
 const download_init = require('./download');
+const plugins = require('./plugins');
 const fs = require('fs');
 const { session } = require('electron')
 require("@electron/remote/main").initialize()
 
+app.commandLine.hasSwitch('disable-gpu')
 
 function createWindow () {
   const win = new BrowserWindow({
@@ -105,7 +107,6 @@ ipcMain.handle("saveconfs",async(event,message) =>{
 
 ipcMain.handle("getdefaultconfs",async(event,message) =>{
   user_home = app.getPath('home')
-
 
   console.log(user_home)
   try {
