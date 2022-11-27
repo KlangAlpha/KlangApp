@@ -151,16 +151,18 @@ ipcMain.handle("getplugindir",async(event,message) =>{
       user_home = app.getPath('home')
       file_path = user_home + "/.klang/plugins" 
     
-      filelist = fs.readdirSync(file_path)
-      var plugindata = []
-      console.log(filelist);
-      var i;
-      for (i=0;i<filelist.length;i++){
-        data = fs.readFileSync(file_path + "/" + filelist[i]).toString() 
-        plugindata.push(JSON.parse(data))
-      }
-  
-      app.mainWin.webContents.send('plugindir',JSON.stringify(plugindata))
+      try{
+        filelist = fs.readdirSync(file_path)
+        var plugindata = []
+        console.log(filelist);
+        var i;
+        for (i=0;i<filelist.length;i++){
+          data = fs.readFileSync(file_path + "/" + filelist[i]).toString() 
+          plugindata.push(JSON.parse(data))
+        }
+    
+        app.mainWin.webContents.send('plugindir',JSON.stringify(plugindata))
+    }catch{}
 })
 
 // 控制新窗口
