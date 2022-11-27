@@ -130,14 +130,17 @@ ipcMain.handle("getplugin",async(event,message) =>{
   user_home = app.getPath('home')
   file_path = user_home + "/.klang/plugins" 
 
-  filelist = fs.readdirSync(file_path)
+  try{
+    filelist = fs.readdirSync(file_path)
 
-  console.log(filelist);
-  var i;
-  for (i=0;i<filelist.length;i++){
-    data = fs.readFileSync(file_path + "/" + filelist[i]).toString() 
-    plugindata.push(JSON.parse(data))
-  }
+    console.log(filelist);
+    var i;
+    for (i=0;i<filelist.length;i++){
+      data = fs.readFileSync(file_path + "/" + filelist[i]).toString() 
+      plugindata.push(JSON.parse(data))
+    }
+  }catch{}
+
 
   app.mainWin.webContents.send('plugindata',JSON.stringify(plugindata))
 
