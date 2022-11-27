@@ -199,11 +199,11 @@ function start_server(){
         }
         if (typeof server_handler5 != "object"){
             // python.exe .\src\Klang\server\kws_server.py
-               server_handler4 = exec_status(root_path + server_path,  [],false)
+               server_handler5 = exec_status(root_path + server_path,  [],false)
            }
         if (typeof server_handler6 != "object"){
             // python.exe .\src\Klang\server\kws_server.py
-               server_handler4 = exec_status(root_path + server_path,  [],false)
+               server_handler6 = exec_status(root_path + server_path,  [],false)
            }
 
 }
