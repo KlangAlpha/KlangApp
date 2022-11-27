@@ -4,13 +4,16 @@ const path = require('path');
 const axios = require( 'axios');
 const fs = require("fs")
 
+axios.defaults.timeout = 3000;
+
 async function axios_get(url){
   console.log(url)
   try {
     resp = await axios.get(url)
     return resp   
   } catch (err){
-    console.log (err.response.status)
+    console.log("get error")
+    //console.log (err.response.status)
     return -1
   }
 }
