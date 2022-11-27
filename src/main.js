@@ -119,13 +119,45 @@ ipcMain.handle("getdefaultconfs",async(event,message) =>{
 
 ipcMain.handle("getplugin",async(event,message) =>{
   root_path = path.join(__dirname)
-
+  var plugindata = []
+  //1. 读取默认的plugin
   try{
-    plugindata = fs.readFileSync(root_path + "/plugin_default.json").toString()
-    app.mainWin.webContents.send('plugindata',plugindata)
+    data = fs.readFileSync(root_path + "/plugin_default.json").toString() 
+    plugindata.push(JSON.parse(data))
   } catch{}
   
+  //2. 读取安装的 plugins
+  user_home = app.getPath('home')
+  file_path = user_home + "/.klang/plugins" 
 
+  filelist = fs.readdirSync(file_path)
+
+  console.log(filelist);
+  var i;
+  for (i=0;i<filelist.length;i++){
+    data = fs.readFileSync(file_path + "/" + filelist[i]).toString() 
+    plugindata.push(JSON.parse(data))
+  }
+
+  app.mainWin.webContents.send('plugindata',JSON.stringify(plugindata))
+
+})
+
+ipcMain.handle("getplugindir",async(event,message) =>{
+      //1. 读取安装的 plugins
+      user_home = app.getPath('home')
+      file_path = user_home + "/.klang/plugins" 
+    
+      filelist = fs.readdirSync(file_path)
+      var plugindata = []
+      console.log(filelist);
+      var i;
+      for (i=0;i<filelist.length;i++){
+        data = fs.readFileSync(file_path + "/" + filelist[i]).toString() 
+        plugindata.push(JSON.parse(data))
+      }
+  
+      app.mainWin.webContents.send('plugindir',JSON.stringify(plugindata))
 })
 
 // 控制新窗口

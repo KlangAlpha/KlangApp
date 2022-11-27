@@ -498,7 +498,7 @@
 								"    retmacd = False\n";
 					}
 
-					condition += " and " + this.sourcelist.macd.condition
+					 
 				}
 				
 				//macd 空中加油
@@ -506,7 +506,7 @@
 					code +=this.sourcelist.macdrelay.title;
 					relay_period = "PERIODRELAY = " + this.sourcelist.macdrelay.period  + "\n";
 					code += relay_period + this.sourcelist.macdrelay.code + "\n";
-					condition += " and " + this.sourcelist.macdrelay.condition
+					 
 				}
 
 				//turn 
@@ -515,7 +515,7 @@
 					turn_period = "PERIODT = " + this.sourcelist.turn.period  + "\n";
 					code += "objturn = " + this.sourcelist.turn.objturn + "\n";
 					code += turn_period + this.sourcelist.turn.code + "\n";
-					condition += " and " + this.sourcelist.turn.condition
+					 
 				}
 				
 				//vol
@@ -523,7 +523,7 @@
 					code +=this.sourcelist.vol.title;
 					vol_period = "PERIODV = " + this.sourcelist.vol.period  + "\n";
 					code += vol_period + this.sourcelist.vol.code + "\n";
-					condition += " and " + this.sourcelist.vol.condition
+					 
 				}
 
 				//volatility
@@ -547,7 +547,7 @@
 					
 					
 					code += volatility_period + this.sourcelist.volatility.code + "\n";
-					condition += " and " + this.sourcelist.volatility.condition
+				 
 				}
 
 				//ma30
@@ -557,7 +557,7 @@
 					code += "ma30objval =" +  this.sourcelist.ma30.objval + "\n";
 					ma30_period = "PERIODMA = " + this.sourcelist.ma30.period  + "\n";
 					code += ma30_period + this.sourcelist.ma30.code + "\n";
-					condition += " and " + this.sourcelist.ma30.condition
+					 
 				}
 
 				var that = this;
@@ -790,11 +790,17 @@
 
 			plugindata = JSON.parse(message)
 
-
+			console.log(plugindata)
+			
+			var i,length = plugindata.length;
 
 			// 1. html
 			htmls = []
-			htmls.push(plugindata.html.join("").format(plugindata.id))
+			for (i=0;i<length;i++)
+			{
+				htmls.push(plugindata[i].html.join("").format(plugindata[i].id))
+			}
+			
 
 			htmls.forEach(function(item){
 				document.querySelector('#plugin_html').innerHTML += item
@@ -804,25 +810,33 @@
 			window.app  = Vue.createApp(VueApp)
 			window.vue  =  app.mount('#app')
 
-			// 2. sourcelist 
-			sourceconf = plugindata.sourceconf
-			sourceconf.code = sourceconf.code.join("").format(plugindata.id)
-			sourceconf.condition = sourceconf.condition.format(plugindata.id)
-
-			vue.$data.sourcelist[plugindata.id] = sourceconf
-
-			// 3. code
-			exec_code = plugindata.exec_code.join("").format(plugindata.id)
-
-			// 4. watch
-			plugindata.watch.forEach(function(name){
-				vue.$watch("sourcelist." + plugindata.id + "." + name,function(newVal,oldVal){
-					vue.make_code()
-				})
-			})
+			// 2. sourcelist
+			for (i=0;i<length;i++)
+			{ 
+				sourceconf = plugindata[i].sourceconf
+				sourceconf.code = sourceconf.code.join("").format(plugindata[i].id)
 			
 
-			vue.$data.exec_code[plugindata.id] = exec_code
+				vue.$data.sourcelist[plugindata[i].id] = sourceconf
+			}
+
+			// 3. code
+			for (i=0;i<length;i++)
+			{ 
+				exec_code = plugindata[i].exec_code.join("").format(plugindata[i].id)
+				vue.$data.exec_code[plugindata[i].id] = exec_code
+			}
+			// 4. watch
+			for (i=0;i<length;i++)
+			{ 
+				plugindata[i].watch.forEach(function(name){
+					vue.$watch("sourcelist." + plugindata[i].id + "." + name,function(newVal,oldVal){
+						vue.make_code()
+					})
+				})
+			}
+
+
 
 
 			newconnect(iohost)
