@@ -29,8 +29,8 @@
   },
   "dependencies": {
     "@electron/remote": "^2.0.8",
+    "axios": "^1.2.0",
     "electron-find": "^1.0.7",
-    "electron-request": "^1.8.1",
     "iconv-lite": "^0.6.3"
   },
   "config": {

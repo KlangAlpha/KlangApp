@@ -111,8 +111,16 @@ ipcRenderer.on('confs', async (event, message) => {
 async function getplugin (){
    
    await ipcRenderer.invoke('getplugin',"");
-   // main.js 处理后会回调 confs
+   // main.js 处理后会回调 getplugin
 }
+
+//plugin_set.html
+async function getplugindir (){
+   
+   await ipcRenderer.invoke('getplugindir',"");
+   // main.js 处理后会回调 getplugindir
+}
+
 
 //appinit函数调用
 String.prototype.format = function() {
@@ -135,3 +143,10 @@ async function downplugin(url){
    await ipcRenderer.invoke('plugin_download',url);
    //plugins.js 处理
 }
+
+//main.js 相应 getplugin 的调用，返回数据
+ipcRenderer.on('plugindir', async (event, message) => {
+   
+   plugininit(message)
+  
+})
