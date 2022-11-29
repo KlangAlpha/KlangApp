@@ -23,7 +23,7 @@
 </div>
 
 <div id="window2" class="row" style="width:80%;margin:100px;min-height:600px;">
-<iframe id="win2_iframe" src=""></iframe>
+
 <webview src="" id="win3_webview" partition="persist:jqk"></webview>
 </div>
 
@@ -77,8 +77,11 @@
         
           $("#win3_webview").attr('src',href)
     }     
-    
+
+
+
     async function getbkdata(code,index,cookie_val){    
+        if (cookie_val == "" ) cookie_val = $("#cookies").html()
 
         axios.get(apihost+"/gn/detail/field/199112/order/desc/page/1/ajax/1/code/"+code,
           {headers:{cook:"v="+cookie_val}}).then((response) => {
@@ -111,6 +114,9 @@
 
   var hostname = window.location.hostname
   var host = window.location.host
+
+
+
   if (hostname == ""){
     hostname = "127.0.0.1"
     apihost = "http://127.0.0.1:9999"
@@ -142,13 +148,26 @@
           getDatas(that)
         },
         async getbkcode(href,index){
+           
           var reg = /\d+\/$/
           var code =  reg.exec(href)[0].replace('/','')
           winiframe("http://q.10jqka.com.cn"+"/gn/detail/field/199112/order/desc/page/1/ajax/1/code/"+code)
-         
-          ipcRenderer.invoke('get_cookies',"").then(result=>{  
-            getbkdata(code,index,result)
-          });
+          
+         async function load_function (){
+                
+                 
+                ipcRenderer.invoke('get_cookies',"").then(result=>{  
+                      console.log(result)
+                      getbkdata(code,index,result)
+                });
+
+                webview1.removeEventListener('did-finish-load',load_function);
+          }
+
+          var webview1 =document.getElementById("win3_webview");
+          webview1.addEventListener('did-finish-load',load_function)
+
+
 
       }
     }

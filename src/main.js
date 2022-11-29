@@ -90,8 +90,15 @@ app.on('window-all-closed', () => {
 ipcMain.handle('get_cookies',async (event, message) => {
   const ses = session.fromPartition('persist:jqk')
   const cookies  = await ses.cookies.get({ url: 'http://q.10jqka.com.cn' })
+  let i = 0;
 
-  return cookies[0].value
+  for (i=0;i<cookies.length;i++){
+    if (cookies[i].name == "v"){
+      return cookies[i].value
+    }
+  }
+  
+  return ""
   
 })
 
