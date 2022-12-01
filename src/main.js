@@ -11,6 +11,7 @@ require("@electron/remote/main").initialize()
 
 app.commandLine.hasSwitch('disable-gpu')
 
+
 function createWindow () {
   const win = new BrowserWindow({
     width: 1440,
@@ -109,6 +110,10 @@ ipcMain.handle("saveconfs",async(event,message) =>{
   fs.writeFileSync(filename,JSON.stringify(confs))
 })
 
+ipcMain.handle('webviewContent',async (event,message) => {
+
+  console.log(message)
+})
 
 
 

@@ -24,7 +24,7 @@
 
 <div id="window2" class="row" style="width:80%;margin:100px;min-height:600px;">
 
-<webview src="" id="win3_webview" partition="persist:jqk"></webview>
+<webview src="" id="win3_webview" partition="persist:jqk" preload="js/webview.js"></webview>
 </div>
 
 <div style="z-index: 9999; position:fixed; right: 50px; bottom: 50px;">
@@ -81,7 +81,7 @@
 
 
     async function getbkdata(code,index,cookie_val){    
-        if (cookie_val == "" ) cookie_val = $("#cookies").html()
+        
 
         axios.get(apihost+"/gn/detail/field/199112/order/desc/page/1/ajax/1/code/"+code,
           {headers:{cook:"v="+cookie_val}}).then((response) => {
@@ -99,6 +99,22 @@
         });
     } 
 
+    async function postbkdata(code,index,data){
+      axios.post(apihost+"/gn/detail/field/199112/order/desc/page/1/ajax/1/code/"+code,{data:data})
+      .then((response) => {
+        console.log("post",response.data)
+        $('#bk'+index).html(response.data)
+        tableClass();
+        setTimeout("tableClass()",1000)
+        $("#loader").css('opacity',0.05)
+        $("#loader").hide()
+        })
+        .catch((error) => {
+        $("#loader").css('opacity',0.05)
+        $("#loader").hide()
+        $("#cookies").html("")
+        });
+    }
   async function getDatas(that){
 
         response = await axios.get(apihost+"/funds/gnzjl/")
@@ -159,14 +175,14 @@
           $("#loader").css('opacity',0.8)
           $("#loader").show()        
          async function load_function (){
+                webview1.openDevTools()
                 window.webview1 = webview1
                 console.log(webview1.ownerDocument)         
-                 
                 ipcRenderer.invoke('get_cookies',"").then(result=>{  
                       console.log(result)
                       getbkdata(code,index,result)
                 });
-
+                
                 webview1.removeEventListener('did-finish-load',load_function);
           }
 

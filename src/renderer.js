@@ -1,10 +1,11 @@
 
 const { ipcRenderer } = require('electron');
-const {getCurrentWebContents } = require("@electron/remote")
+const {getCurrentWebContents,session,webContents } = require("@electron/remote")
 const {FindInPage} = require("electron-find/src/index.js")
 
 const information = document.getElementById('download_info')
 
+window.webContents = webContents
 
 let findInPage = new FindInPage(getCurrentWebContents(),{
    preload:true,
@@ -66,10 +67,7 @@ ipcRenderer.on('status', (event, message) => {
  async function download_data_zip(){
     await ipcRenderer.invoke('download_data_zip',"");
  }
- async function get_cookies(){
-   val = await ipcRenderer.invoke('get_cookies',"");
-   return val 
-}
+
 ipcRenderer.on('cookies', (event, message) => {
    
    $("#cookies").html(message);
@@ -150,3 +148,22 @@ ipcRenderer.on('plugindir', async (event, message) => {
    plugininit(message)
   
 })
+
+
+//get session
+async function get_cookies(domain){
+   const ses = session.fromPartition('persist:jqk')
+   const cookies  = await ses.cookies.get({ url: 'http://q.10jqka.com.cn' })
+   let i = 0;
+   var val="";
+   for(i=0;i<cookies.length;i++){
+     let c = cookies[i]
+      await session.defaultSession.cookies.set({url:domain,name:c['name'],value:c['value']})
+      if (c.name == "v"){
+         val  = c.value
+      }
+   }
+   console.log(val)
+   return val 
+}
+

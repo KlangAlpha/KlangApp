@@ -14,6 +14,9 @@ async function base (){
   gulp.src(['./src/renderer.js'])
   .pipe(gulp.dest('./dist/main/js/'))
 
+  gulp.src(['./src/webview.js'])
+  .pipe(gulp.dest('./dist/main/js/'))
+
   return gulp.src('./src/logo.svg')
   .pipe(gulp.dest('./dist/images/'))
 }
