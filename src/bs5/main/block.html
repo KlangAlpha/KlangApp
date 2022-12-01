@@ -89,9 +89,12 @@
           $('#bk'+index).html(response.data)
           tableClass();
           setTimeout("tableClass()",1000)
-
+          $("#loader").css('opacity',0.05)
+          $("#loader").hide()
         })
         .catch((error) => {
+           $("#loader").css('opacity',0.05)
+          $("#loader").hide()
           $("#cookies").html("")
         });
     } 
@@ -152,7 +155,9 @@
           var reg = /\d+\/$/
           var code =  reg.exec(href)[0].replace('/','')
           winiframe("http://q.10jqka.com.cn"+"/gn/detail/field/199112/order/desc/page/1/ajax/1/code/"+code)
-          
+
+          $("#loader").css('opacity',0.8)
+          $("#loader").show()        
          async function load_function (){
                 window.webview1 = webview1
                 console.log(webview1.ownerDocument)         
