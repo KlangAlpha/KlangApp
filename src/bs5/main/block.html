@@ -154,7 +154,8 @@
           winiframe("http://q.10jqka.com.cn"+"/gn/detail/field/199112/order/desc/page/1/ajax/1/code/"+code)
           
          async function load_function (){
-                
+                window.webview1 = webview1
+                console.log(webview1.ownerDocument)         
                  
                 ipcRenderer.invoke('get_cookies',"").then(result=>{  
                       console.log(result)
