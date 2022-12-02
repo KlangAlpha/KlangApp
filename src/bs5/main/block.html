@@ -100,7 +100,7 @@
     } 
 
     async function postbkdata(code,index,data){
-      axios.post(apihost+"/gn/detail/field/199112/order/desc/page/1/ajax/1/code/"+code,{data:data})
+      axios.post(apihost+"/gn/detail/field/199112/order/desc/page/1/ajax/1/code/"+code,{data:data,'parserData':true})
       .then((response) => {
         console.log("post",response.data)
         $('#bk'+index).html(response.data)
@@ -172,22 +172,13 @@
           var code =  reg.exec(href)[0].replace('/','')
           winiframe("http://q.10jqka.com.cn"+"/gn/detail/field/199112/order/desc/page/1/ajax/1/code/"+code)
 
-          $("#loader").css('opacity',0.8)
-          $("#loader").show()        
-         async function load_function (){
-                webview1.openDevTools()
-                window.webview1 = webview1
-                console.log(webview1.ownerDocument)         
-                ipcRenderer.invoke('get_cookies',"").then(result=>{  
-                      console.log(result)
-                      getbkdata(code,index,result)
-                });
-                
-                webview1.removeEventListener('did-finish-load',load_function);
-          }
 
-          var webview1 =document.getElementById("win3_webview");
-          webview1.addEventListener('did-finish-load',load_function)
+          // 仅仅侦听一次，下次点击事件再次启动侦听
+          ipcRenderer.once('webviewContent',(e,message)=>{
+
+                postbkdata(code,index,message)
+          })  
+
 
 
 

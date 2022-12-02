@@ -111,8 +111,8 @@ ipcMain.handle("saveconfs",async(event,message) =>{
 })
 
 ipcMain.handle('webviewContent',async (event,message) => {
-
-  console.log(message)
+  // send to mainwinrpc , 
+   app.mainWin.webContents.send('webviewContent',message);
 })
 
 
