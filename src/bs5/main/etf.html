@@ -1,12 +1,13 @@
 {% extends 'layout.html' %}
 
 {% block main_body %}
+<link  href="https://lib.baomitu.com/jquery.tablesorter/2.31.3/css/theme.default.min.css" rel="stylesheet">
 
 	  <div class="container-full" id="app">
       <section class="content">
         <div class="row" style="width:80%;margin:100px;" id="content">
 
-            <table>
+            <table id="etftable" class="tablesorter">
             <thead>
                                     <tr role="head" class="tr_hover">  
                                         <th style="width: 36px;">序号</th>
@@ -105,8 +106,16 @@
 
   {% block externjs %}
 
+  <script  src="https://lib.baomitu.com/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
+  <script src="https://lib.baomitu.com/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.js"></script>
   <script>
     var  win = window
+
+    function init_table(){
+        $(function() {
+         $("#etftable").tablesorter();
+    });
+    }
 
      
     function formatData(code,datas){
@@ -155,10 +164,11 @@
 
       that.$nextTick(function(){
          tableClass()
+         init_table()
       });
 
      setTimeout("tableClass()",1000 );  
-
+     setTimeout("init_table()",2000 );  
  }
 
  function tostocklist(that){
@@ -180,7 +190,7 @@
     function tableClass(){
       tables = document.getElementsByTagName('table')
       for (i=0;i<tables.length;i++){
-         tables[i].className = 'table table-bordered'
+         tables[i].className = 'table table-bordered tablesorter'
          tables[i].border = '1'
       }
    }
