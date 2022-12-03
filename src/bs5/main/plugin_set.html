@@ -64,8 +64,11 @@
                                         <span class="text-line fs-18" style="margin:30px;">{{item.description}}</span>
                                         <!-- General tools such as edit or delete-->
                                         <div class="pull-right d-block text-dark flexbox">
-                                          <a href="" data-bs-toggle="tooltip" data-container="body" title="" data-bs-original-title="Edit"><i class="fa fa-edit"></i></a>
-                                          <a href="" data-bs-toggle="tooltip" data-container="body" title="" data-bs-original-title="Remove"><i class="fa fa-trash-o"></i></a>
+                                            <a class="btn btn-light" @click="handler_enable(item,1)" v-if="item.enable==0">启用</a>
+                                            <a class="btn btn-warning" @click="handler_enable(item,0)" v-else>停用</a>
+
+                                          <!--a href="" data-bs-toggle="tooltip" data-container="body" title="" data-bs-original-title="Edit"><i class="fa fa-edit"></i></a>
+                                          <a href="" data-bs-toggle="tooltip" data-container="body" title="" data-bs-original-title="Remove"><i class="fa fa-trash-o"></i></a-->
                                         </div>
                                         <div class="mt-5 ms-50 ps-5">网址: <a :href="item.url">{{item.url}}</a></div>
                                         <div class="mt-5 ms-50 ps-5"><em></em></div>
@@ -80,7 +83,27 @@
 
         </div>
       </div>
+
+
     </section>
+
+    <div class="modal" id="modal-center" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">正在安装插件</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="close"></button>
+            </div>
+            <div class="modal-body" v-html="installinfo">
+              
+            </div>
+            <div class="modal-footer modal-footer-uniform">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="close">完成</button>
+              
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
      
 {% endblock %}
@@ -103,7 +126,8 @@
             data() {
                 return {
                     pluginArray:[],
-                    plugurl:""
+                    plugurl:"",
+                    installinfo:"<p>正在安装,请稍等</p>"
 
                 }
             },
@@ -120,12 +144,23 @@
                 configs(e){
 
                 },
+                close(){
+                    this.installinfo = "<p>正在安装,请稍等</p>"
+                    $("#modal-center").hide()
+                },
                 async plugindown(){
                     //renderer.js
                     if (this.plugurl == "" ){
                         alert("请输入plugin github地址")
+                        return 
                     }
                     downplugin(this.plugurl)
+                    $("#modal-center").show()
+
+                },
+                async handler_enable(item,val){
+                    item.enable = val
+                    await ipcRenderer.invoke('savepluginfile',JSON.stringify(item)); 
                 }
             }
         }//VueApp

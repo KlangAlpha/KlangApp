@@ -142,6 +142,10 @@ async function downplugin(url){
    //plugins.js 处理
 }
 
+ipcRenderer.on('installinfo',async(e,message)=>{
+   vue.$data.installinfo += "<p>" + message + "</p>"
+})
+
 //main.js 相应 getplugin 的调用，返回数据
 ipcRenderer.on('plugindir', async (event, message) => {
    

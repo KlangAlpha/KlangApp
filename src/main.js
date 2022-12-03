@@ -129,6 +129,7 @@ ipcMain.handle("getdefaultconfs",async(event,message) =>{
 
 })
 
+//主页显示plugin数据
 ipcMain.handle("getplugin",async(event,message) =>{
   root_path = path.join(__dirname)
   var plugindata = []
@@ -148,8 +149,12 @@ ipcMain.handle("getplugin",async(event,message) =>{
     console.log(filelist);
     var i;
     for (i=0;i<filelist.length;i++){
-      data = fs.readFileSync(file_path + "/" + filelist[i]).toString() 
-      plugindata.push(JSON.parse(data))
+      data = fs.readFileSync(file_path + "/" + filelist[i]).toString()
+      data = JSON.parse(data)
+      if (data.enable == 1) {
+        plugindata.push(data)
+      } 
+      
     }
   }catch{}
 
@@ -158,6 +163,7 @@ ipcMain.handle("getplugin",async(event,message) =>{
 
 })
 
+//插件配置页面显示插件数据
 ipcMain.handle("getplugindir",async(event,message) =>{
       //1. 读取安装的 plugins
       user_home = app.getPath('home')
@@ -169,13 +175,16 @@ ipcMain.handle("getplugindir",async(event,message) =>{
         console.log(filelist);
         var i;
         for (i=0;i<filelist.length;i++){
-          data = fs.readFileSync(file_path + "/" + filelist[i]).toString() 
-          plugindata.push(JSON.parse(data))
+          data = fs.readFileSync(file_path + "/" + filelist[i]).toString()
+          data = JSON.parse(data)
+          data['filename'] = filelist[i] 
+          plugindata.push(data)
         }
     
         app.mainWin.webContents.send('plugindir',JSON.stringify(plugindata))
     }catch{}
 })
+
 
 // 控制新窗口
 function win_event(win){

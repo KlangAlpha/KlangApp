@@ -34,6 +34,16 @@ function save_plugin_file(filename,content){
   fs.writeFileSync(file_path + "/" + filename,content)
 
 }
+
+ipcMain.handle("savepluginfile",async(event,message) =>{
+
+  filecontent = JSON.parse(message)
+  filename = filecontent['filename']
+  delete filecontent['filename']
+
+  save_plugin_file(filename,JSON.stringify(filecontent))
+})
+
 async function list_request(url){
 
   var ext_path = "raw/main/"
@@ -42,44 +52,59 @@ async function list_request(url){
 
   if (url.substr(-1) !== "/") ext_path = "/" + ext_path
 
+ 
   ret = await axios_get(url + ext_path + files_list)
-  if (ret == -1) return ret 
-  
+  if (ret == -1) {
+    return ret 
+  }
 
   files = ret.data
-
-  files.forEach(async function(item){
+  await app.mainWin.webContents.send('installinfo','解析到'+files.length+'个文件')
+  for (let i = 0;i<files.length;i++){
+    item = files [i]
+    app.mainWin.webContents.send('installinfo', i+1 + "、 " + item.path)
     ret = await axios_get(url + ext_path + item.path) 
 
+
     if (ret != - 1){
+      await app.mainWin.webContents.send('installinfo','下载成功')
       save_plugin_file(item.path,JSON.stringify(ret.data))
+    } else {
+
+      await app.mainWin.webContents.send('installinfo','下载失败')
+      return -1;
     }
-  })
+  }
+
+  return 0
+
+
 
 }
 async function requests(url){
  
-
+  await app.mainWin.webContents.send('installinfo','正在下载插件信息')
   ret = await list_request(url)
   if ( ret != -1){
+    await app.mainWin.webContents.send('installinfo','插件安装完成,此页面可以关闭')
     return ret 
   }
-
+  await app.mainWin.webContents.send('installinfo','下载失败，再次尝试下载')
   ret = await  list_request( "https://gh-proxy.com/"+url)
   if ( ret != -1){
+    await app.mainWin.webContents.send('installinfo','插件安装完成,此页面可以关闭')
     return ret 
   }
 
+  await app.mainWin.webContents.send('installinfo','下载失败，再次尝试下载')
   ret = await list_request( "https://ghproxy.com/"+url)
   if ( ret != -1){
+    await app.mainWin.webContents.send('installinfo','插件安装完成,此页面可以关闭')
     return ret 
   }
 
-  ret = await list_request( "https://ghproxy.net/"+url)
-  if ( ret != -1){
-    return ret 
-  }
-
+  
+  await app.mainWin.webContents.send('installinfo','插件安装失败，可能是网络原因，请稍后再此尝试')
 
 }
 
