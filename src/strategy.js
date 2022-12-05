@@ -18,11 +18,11 @@ async function axios_get(url){
   }
 }
 
-function save_plugin_file(filename,content){
+function save_strategy_file(filename,content){
   user_home = app.getPath('home')
   console.log(filename)
 
- 
+
 
   //1. read same name file
      
@@ -31,22 +31,22 @@ function save_plugin_file(filename,content){
 
 }
 
-ipcMain.handle("savepluginfile",async(event,message) =>{
+ipcMain.handle("savestrategyfile",async(event,message) =>{
 
   filecontent = JSON.parse(message)
   filename = filecontent['filename']
   delete filecontent['filename']
 
-  save_plugin_file(filename,JSON.stringify(filecontent))
+  save_strategy_file(filename,JSON.stringify(filecontent))
 })
 
-ipcMain.handle("removeplugin",async(e,message)=>{
+ipcMain.handle("removestrategy",async(e,message)=>{
   filecontent = JSON.parse(message)
   filename = filecontent['filename']
   user_home = app.getPath('home')
   console.log(filename)
 
-  file_path = user_home + "/.klang/plugins" 
+  file_path = user_home + "/.klang/strategy" 
   fs.unlinkSync(file_path + "/" + filename)
 })
 async function list_request(url){
@@ -114,25 +114,24 @@ async function requests(url){
 }
 
 
-ipcMain.handle("plugin_download",async(event,pluginurl) =>{
+ipcMain.handle("strategy_download",async(event,strategyurl) =>{
     
-   
-   
-    console.log(pluginurl)
-    await requests(pluginurl)
+ 
+    await requests(strategyurl)
     
 })
 
-function plugin_init(){
-  user_home = app.getPath('home')
-  file_path = user_home + "/.klang/plugins" 
-  try {
-    fs.mkdirSync (file_path); //没有就创建
-  }catch{}
-  
 
+function strategy_init(){
+    user_home = app.getPath('home')
+    file_path = user_home + "/.klang/strategy" 
+    try {
+      fs.mkdirSync (file_path); //没有就创建
+    }catch{}
+    
 }
 
 module.exports = {
-    plugin_init,
+   
+    strategy_init,
 };

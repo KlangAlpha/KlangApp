@@ -67,8 +67,8 @@
                                             <a class="btn btn-light" @click="handler_enable(item,1)" v-if="item.enable==0">启用</a>
                                             <a class="btn btn-warning" @click="handler_enable(item,0)" v-else>停用</a>
 
-                                          <!--a href="" data-bs-toggle="tooltip" data-container="body" title="" data-bs-original-title="Edit"><i class="fa fa-edit"></i></a>
-                                          <a href="" data-bs-toggle="tooltip" data-container="body" title="" data-bs-original-title="Remove"><i class="fa fa-trash-o"></i></a-->
+                                          <!--a href="" data-bs-toggle="tooltip" data-container="body" title="" data-bs-original-title="Edit"><i class="fa fa-edit"></i></a-->
+                                          <a class="btn btn-danger" @click="remove(item)"><i class="fa fa-trash-o"></i></a>
                                         </div>
                                         <div class="mt-5 ms-50 ps-5">网址: <a :href="item.url">{{item.url}}</a></div>
                                         <div class="mt-5 ms-50 ps-5"><em></em></div>
@@ -104,6 +104,25 @@
           </div>
         </div>
       </div>
+
+      <div class="modal" id="modal-center-remove" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">删除插件</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="close1"></button>
+            </div>
+            <div class="modal-body" >
+              警告：删除后将无法恢复。
+            </div>
+            <div class="modal-footer modal-footer-uniform">
+              <button type="button" class="btn btn-warning" data-bs-dismiss="modal" @click="close1">取消</button>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="remove1">继续</button>
+              
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
      
 {% endblock %}
@@ -127,7 +146,8 @@
                 return {
                     pluginArray:[],
                     plugurl:"",
-                    installinfo:"<p>正在安装,请稍等</p>"
+                    installinfo:"<p>正在安装,请稍等</p>",
+                    delete_obj:"",
 
                 }
             },
@@ -147,6 +167,21 @@
                 close(){
                     this.installinfo = "<p>正在安装,请稍等</p>"
                     $("#modal-center").hide()
+                    window.location.reload()
+                },
+                close1(){
+                    $("#modal-center-remove").hide()
+                    window.location.reload()
+                },
+                remove1(){
+                    var  that = this
+                    ipcRenderer.invoke("removeplugin",JSON.stringify(that.delete_obj))
+                    setTimeout(this.close1,1000);
+                },
+
+                remove(item){
+                     this.delete_obj = item
+                    $("#modal-center-remove").show()
                 },
                 async plugindown(){
                     //renderer.js

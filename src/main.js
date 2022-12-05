@@ -4,7 +4,9 @@ const child_process= require('child_process');
 const menu = require('./menu');
 const {close_server,start_server} = require('./python');
 const download_init = require('./download');
-const plugins = require('./plugins');
+const {plugin_init} = require('./plugins');
+const {strategy_init} = require('./strategy');
+
 const fs = require('fs');
 const { session } = require('electron')
 require("@electron/remote/main").initialize()
@@ -28,6 +30,26 @@ function createWindow () {
     }
   })
 
+
+  // 现在不使用 download 功能，之前是为了下载python
+  // download_init(win);
+
+  plugin_init()
+  strategy_init()
+
+  
+  // 先 检查 之前是否启动了 klang server
+  close_server();
+
+  // 关闭需要时间，因此1秒后启动
+  
+  setTimeout(start_server,1000);
+   // 3秒再次检查启动
+  setTimeout(start_server,3000);
+ 
+ 
+
+
   require("@electron/remote/main").enable(win.webContents)
   win_event(win);
   app.mainWin = win;
@@ -49,18 +71,8 @@ function createWindow () {
     globalShortcut.unregister("CommandOrControl+F")
   })
 
-  download_init(win);
 
-  // 先 检查 之前是否启动了 klang server
-  close_server();
 
-  // 关闭需要时间，因此1秒后启动
-  
-  setTimeout(start_server,1000);
-   // 3秒再次检查启动
-  setTimeout(start_server,3000);
- 
- 
 
 }
 
@@ -122,7 +134,7 @@ ipcMain.handle("getdefaultconfs",async(event,message) =>{
 
   console.log(user_home)
   try {
-    data = fs.readFileSync(user_home + "/.klang/config.json")
+    data = fs.readFileSync(user_home + "/.klang/strategy/config.json")
     app.confs = data.toString()
     app.mainWin.webContents.send('confs',app.confs)
   } catch{}

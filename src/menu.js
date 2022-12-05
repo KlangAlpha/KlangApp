@@ -48,10 +48,16 @@ const template = [
         label:"保存配置文件",
         click:async()=>{
           user_home = app.getPath('home')
+
+          defpath = user_home + "/.klang/strategy/config.json"
+
+          if  (process.platform == 'win32'){
+              defpath = user_home + '\\.klang\\strategy\\config.json'
+          }
           
           filename = await dialog.showSaveDialog({ properties: ['openFile'],
           filters: [{ name: 'Json', extensions: ['json'] }],
-          defaultPath: user_home + "/.klang/config.json"
+          defaultPath: defpath,
           })
 
           console.log(filename.filePath)
