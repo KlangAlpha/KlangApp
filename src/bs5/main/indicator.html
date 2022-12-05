@@ -1,0 +1,228 @@
+<div class="row">
+    <div class="col-10">
+        <div class="box">
+            <div class="box-header with-border">
+            
+                <div class="demo-checkbox">
+                    <input type="checkbox" id="md_checkbox_21" class="filled-in chk-col-primary" checked="" v-model="sourcelist.macd.select">
+                    <label for="md_checkbox_21"><h4 class="box-title">MACD（3日内出现金叉）</h4></label>
+                    <input type="checkbox" id="md_checkbox_211" class="filled-in chk-col-primary" checked="" v-model="sourcelist.macd.dea">
+                    <label for="md_checkbox_211"  style="margin-left:40px;"><h4 class="box-title">0轴上方</h4></label>	
+    
+                </div>
+
+                
+            </div>
+            <div class="box-body" v-if="sourcelist.macd.select">
+                <div class="demo-radio-button">
+                    <input name="group5" type="radio" id="radio_535" class="with-gap radio-col-warning" v-model="sourcelist.macd.period" value="C">
+                    <label for="radio_535">日线</label>
+                    <input name="group5" type="radio" id="radio_532" class="with-gap radio-col-success" v-model="sourcelist.macd.period" value="WC">
+                    <label for="radio_532">周线</label>
+                    <input name="group5" type="radio" id="radio_533" class="with-gap radio-col-info" v-model="sourcelist.macd.period" value="MC">
+                    <label for="radio_533">月线</label>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="box">
+            <div class="box-header with-border">
+            
+                <div class="demo-checkbox">
+                    <input type="checkbox" id="md_checkbox_21_2" class="filled-in chk-col-primary" checked="" v-model="sourcelist.macdrelay.select">
+                    <label for="md_checkbox_21_2"><h4 class="box-title">MACD 空中加油( 与MACD金叉二选一 )</h4></label>
+                </div>
+
+                
+            </div>
+            <div class="box-body" v-if="sourcelist.macdrelay.select">
+                <div class="demo-radio-button">
+                    <input name="group5_2" type="radio" id="radio_535_2" class="with-gap radio-col-warning" v-model="sourcelist.macdrelay.period" value="C">
+                    <label for="radio_535_2">日线</label>
+                    <input name="group5_2" type="radio" id="radio_532_2" class="with-gap radio-col-success" v-model="sourcelist.macdrelay.period" value="WC">
+                    <label for="radio_532_2">周线</label>
+                    <input name="group5_2" type="radio" id="radio_533_2" class="with-gap radio-col-info" v-model="sourcelist.macdrelay.period" value="MC">
+                    <label for="radio_533_2">月线</label>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="box">
+            <div class="box-header with-border">
+            
+                <div class="demo-checkbox">
+                    <input type="checkbox" id="md_checkbox_22" class="filled-in chk-col-success" checked="" v-model="sourcelist.turn.select">
+                    <label for="md_checkbox_22"><h4 class="box-title">换手率</h4></label>	
+                    
+                    <label style="margin-left: 10px;margin-right: 5px; min-width: 40px;width:auto;">大于:</label>	
+                    <input class="filled-in chk-col-success"  type="number" name="number" v-model="sourcelist.turn.objturn">
+                            
+                        
+                                
+                </div>
+
+                
+            </div>
+            <div class="box-body" v-if="sourcelist.turn.select">
+                <div class="demo-radio-button" >
+                    <input name="group6" type="radio" id="radio_635" class="with-gap radio-col-warning"  v-model="sourcelist.turn.period" value="T">
+                    <label for="radio_635">日线</label>
+                    <input name="group6" type="radio" id="radio_632" class="with-gap radio-col-success" v-model="sourcelist.turn.period" value="WT">
+                    <label for="radio_632">周线</label>
+                    <input name="group6" type="radio" id="radio_633" class="with-gap radio-col-info" v-model="sourcelist.turn.period" value="MT">
+                    <label for="radio_633">月线</label>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="box-header with-border">
+            
+                <div class="demo-checkbox">
+                    <input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-info" checked="" v-model="sourcelist.volatility.select">
+                    <label for="md_checkbox_23"><h4 class="box-title">横盘波动率</h4></label>					
+                </div>
+
+                
+            </div>
+            <div class="box-body" v-if="sourcelist.volatility.select">
+                <div class="demo-radio-button">
+                    <input name="group7" type="radio" id="radio_735" class="with-gap radio-col-warning" v-model="sourcelist.volatility.period" value="D">
+                    <label for="radio_735">日线</label>
+                    <input name="group7" type="radio" id="radio_732" class="with-gap radio-col-success" v-model="sourcelist.volatility.period" value="W">
+                    <label for="radio_732">周线</label>
+                    <input name="group7" type="radio" id="radio_733" class="with-gap radio-col-info" v-model="sourcelist.volatility.period" value="M">
+                    <label for="radio_733">月线</label>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="box-header with-border">
+            
+                <div class="demo-checkbox">
+                    <input type="checkbox" id="md_checkbox_24" class="filled-in chk-col-warning" checked="" v-model="sourcelist.vol.select">
+                    <label for="md_checkbox_24"><h4 class="box-title">成交量放大</h4></label>					
+                </div>
+
+                
+            </div>
+            <div class="box-body" v-if="sourcelist.vol.select">
+                <div class="demo-radio-button">
+                    <input name="group8" type="radio" id="radio_835" class="with-gap radio-col-warning" v-model="sourcelist.vol.period" value="V">
+                    <label for="radio_835">日线</label>
+                    <input name="group8" type="radio" id="radio_832" class="with-gap radio-col-success" v-model="sourcelist.vol.period" value="WV">
+                    <label for="radio_832">周线</label>
+                    <input name="group8" type="radio" id="radio_833" class="with-gap radio-col-info" v-model="sourcelist.vol.period" value="MV">
+                    <label for="radio_833">月线</label>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="box">
+            <div class="box-header with-border">
+            
+                <div class="demo-checkbox">
+                    <input type="checkbox" id="md_checkbox_25" class="filled-in chk-col-danger" checked="" v-model="sourcelist.ma30.select">
+                    <label for="md_checkbox_25"><h4 class="box-title">价格上穿N周期均线(2周期内)</h4></label>
+                    <label style="margin-left: 10px;margin-right: 5px; min-width: 40px;width:auto;">周期</label>	
+                    <input class="filled-in chk-col-success"  type="number" name="number" v-model="sourcelist.ma30.objval">					
+                </div>
+
+                
+            </div>
+            <div class="box-body" v-if="sourcelist.ma30.select">
+                <div class="demo-radio-button">
+                    <input name="group9" type="radio" id="radio_935" class="with-gap radio-col-warning" v-model="sourcelist.ma30.period" value="C">
+                    <label for="radio_935">日线</label>
+                    <input name="group9" type="radio" id="radio_932" class="with-gap radio-col-success" v-model="sourcelist.ma30.period" value="WC">
+                    <label for="radio_932">周线</label>
+                    <input name="group9" type="radio" id="radio_933" class="with-gap radio-col-info" v-model="sourcelist.ma30.period" value="MC">
+                    <label for="radio_933">月线</label>
+
+                </div>
+            </div>
+        </div>
+
+
+         <template id="plugin_html" v-if="plugin_show">
+            
+         </template>
+        
+         
+
+        <div class="box">
+            <div class="box-header with-border">
+            
+                <div class="demo-checkbox">
+                    <input type="checkbox" id="md_checkbox_code" class="chk-col-success" v-model="runconfs.showcode">
+                    <label for="md_checkbox_code"><h4 class="box-title">显示源代码</h4></label>		
+                    <input type="checkbox" id="md_klang_server" class="chk-col-success" v-model="runconfs.klangserver">
+                    <label for="md_klang_server"><h4 class="box-title">远程运行</h4></label>	
+
+                    <input type="checkbox" id="md_klang_date" class="chk-col-success" v-model="runconfs.klangdate">
+                    <label for="md_klang_date" style="margin-left: 10px;margin-right: 5px; min-width: 40px;width:auto;" ><h4 class="box-title">复盘日期</h4></label>
+                    <input class="filled-in chk-col-success"  type="text" v-if="runconfs.klangdate" v-model="runconfs.inputdate">	
+
+
+                </div>
+
+                <textarea rows="15" class="form-control" v-if="runconfs.showcode" v-model="sourcecode"></textarea>
+            </div>
+            <div class="box-footer text-end">
+                <div class="spinner-border spinner-border-sm text-primary" role="status" v-if="work" style="margin-right:15px;">
+                    <span class="visually-hidden">.</span>
+                </div>
+                <span>{{countdown}}</span></span><span v-if="runcode"> - {{runcode}}</span>
+                <a  class="btn btn-danger" style="margin-left:5px;" id="run">
+                  运行
+                </a>
+            </div>
+        </div>
+
+        <div class="box">
+           <div class="box-body">
+            <div class="table-responsive"></div>
+
+            <table class="table table-bordered mb-0">
+            <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">name</th>
+            <th scope="col">code</th>
+            <th scope="col">值</th>
+            <th scope="col">流通值(亿)</th>
+            <th scope="col">板块</th>
+            <th scope="col">概念板块</th>
+            
+            </tr>
+            </thead>
+             <tbody>
+                <tr v-for="(item,index) in result" >
+                <th scope="row" >{{index+1}}</th>
+                <td><a v-bind:href="'https://klang.org.cn/kline.html?code='+item.code" target=_blank @click="openbrowser($event)">{{item.name}}</a></td>
+                <td><a v-bind:href="'https://gu.qq.com/'+item.code" target=_blank @click="openbrowser($event)"><font color=blue>{{item.code}}</font></a></td>
+                <td>{{item.value}}</td>
+                <td>{{item.hqltsz}}</td>
+                <td>{{item.tdxbk}}</td>
+                <td>{{item.tdxgn}}</td>
+                
+                </tr>
+                </tbody>
+            </table> 
+            </div> <!--box-body-->
+        </div>
+
+        </div><!--box-->	
+
+
+    </div><!--col-12-->

@@ -1,0 +1,164 @@
+
+{% extends 'layout.html' %}
+
+{% block main_body %}
+
+<div class="container-full" id="app">
+    <section class="content">
+        <div class="row">
+            <div class="col-xl-3 col-lg-6 col-12">
+                <button class="btn btn-danger w-p100 mb-30" type="button" alt="default" data-bs-toggle="modal" data-bs-target=".bs-example-modal-lg">保存策略</button>
+
+                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+                  <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h4 class="modal-title" id="myLargeModalLabel">保存一个新的策略</h4>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+ 
+                                <div class="form-group">
+                                  <input class="form-control" placeholder="标题">
+                                </div>
+                                <div class="form-group">
+                                     <h4>策略描述</h4>
+                                      <textarea id="compose-textarea" class="form-control" style="height: 300px;"></textarea>
+                                    </div>
+                             
+                          </div>
+                          <div class="modal-footer">
+                              <div class="pull-right">
+                                  <button   class="btn btn-default" style="margin-right: 10px;"><i class="fa fa-pencil"></i> 取消</button>
+                                  <button   class="btn btn-success"><i class="fa fa-envelope-o"></i>保存</button>
+                              </div>
+                              <!--button type="reset" class="btn btn-danger"><i class="fa fa-times"></i> Discard</button>
+                              <button type="button" class="btn btn-danger text-start" data-bs-dismiss="modal">Close</button-->
+                          </div>
+                      </div>
+                      <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
+              </div>
+              <!-- /.modal -->
+
+                <div class="box">
+                  <div class="box-header with-border">
+                    <h4 class="box-title">策略列表</h4>
+                    <ul class="box-controls pull-right">
+                      <li><a class="box-btn-slide" href="#"></a></li>	
+                    </ul>
+                  </div>
+                  <div class="box-body no-padding mailbox-nav">
+                    <ul class="nav nav-pills flex-column">
+                      <li class="nav-item"><a class="nav-link active"  > 我的第一个策略
+                        </a></li>
+                      <li class="nav-item"><a class="nav-link"  > 横盘突破</a></li>
+                      <li class="nav-item"><a class="nav-link"  > 步步高升</a></li>
+                      <li class="nav-item"><a class="nav-link"  > 老鸭头</a></li>
+                      <li class="nav-item"><a class="nav-link"  > 三涨停回调</a></li>
+
+                    </ul>
+                  </div>
+                  <!-- /.box-body -->
+                </div>
+
+                </div>
+
+              <div class="col-xl-8 col-lg-10 col-12">
+                <div class="box">
+                  <div class="box-header with-border">
+                    <h4 class="box-title">配置策略</h4>
+                      <div class="box-controls pull-right">
+                      <div class="box-header-actions">
+
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /.box-header -->
+                  <div class="box-body">
+
+                    {% include "./indicator.html" %}
+                  </div>
+
+                </div>
+                <!-- /. box -->
+              </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}
+
+{% block externjs %}
+
+
+<script>
+
+    $(document).ready(async function(){
+
+        apihost="https://www.klang.org.cn"
+  
+    
+ 
+	  
+	  
+
+        const VueApp = {
+            data() {
+                return {
+                    strategyArray:[],
+                     
+
+
+                }
+            },
+
+            created() {
+                
+            },
+
+            mounted () {
+                var that = this
+ 
+            },
+            methods: {
+                configs(e){
+
+                },
+               
+
+    
+                async handler_enable(item,val){
+                    item.enable = val
+                    await ipcRenderer.invoke('savepluginfile',JSON.stringify(item)); 
+                }
+            }
+        }//VueApp
+        window.vue = Vue.createApp(VueApp).mount('#app1')
+
+        function strategyinit(message){
+            strategydata = JSON.parse(message)
+ 
+            var i,length = strategydata.length;
+
+            // 1. html
+            
+            for (i=0;i<length;i++)
+            {
+                vue.$data.strategyArray.push(strategydata[i])
+            }
+        }
+        window.strategyinit = strategyinit
+
+        await getstrategydir();
+    })
+</script>
+
+{%include "./indicator.js.html" %}
+
+
+{% endblock %}
