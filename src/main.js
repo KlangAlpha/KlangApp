@@ -147,8 +147,37 @@ ipcMain.handle("getplugin",async(event,message) =>{
   var plugindata = []
   //1. 读取默认的plugin
   try{
-    data = fs.readFileSync(root_path + "/plugin_default.json").toString() 
+   
+    data = fs.readFileSync(root_path + "/plugin_macd.json").toString()
+    data = data.replaceAll(/[\n\r]/g,"")
     plugindata.push(JSON.parse(data))
+ 
+    data = fs.readFileSync(root_path + "/plugin_macdrelay.json").toString()
+    data = data.replaceAll(/[\n\r]/g,"")
+    plugindata.push(JSON.parse(data))
+
+    data = fs.readFileSync(root_path + "/plugin_turn.json").toString()
+    data = data.replaceAll(/[\n\r]/g,"")
+    plugindata.push(JSON.parse(data))
+
+    
+    data = fs.readFileSync(root_path + "/plugin_volatility.json").toString()
+    data = data.replaceAll(/[\n\r]/g,"")
+    plugindata.push(JSON.parse(data))
+
+    data = fs.readFileSync(root_path + "/plugin_vol.json").toString()
+    data = data.replaceAll(/[\n\r]/g,"")
+    plugindata.push(JSON.parse(data))
+
+    data = fs.readFileSync(root_path + "/plugin_ma.json").toString()
+    data = data.replaceAll(/[\n\r]/g,"")
+    plugindata.push(JSON.parse(data))
+
+    data = fs.readFileSync(root_path + "/plugin_default.json").toString()
+    data = data.replaceAll(/[\n\r]/g,"")
+    plugindata.push(JSON.parse(data))
+
+
   } catch{}
   
   //2. 读取安装的 plugins
@@ -162,6 +191,7 @@ ipcMain.handle("getplugin",async(event,message) =>{
     var i;
     for (i=0;i<filelist.length;i++){
       data = fs.readFileSync(file_path + "/" + filelist[i]).toString()
+      data = data.replaceAll(/[\n\r]/g,"")
       data = JSON.parse(data)
       if (data.enable == 1) {
         plugindata.push(data)
@@ -188,6 +218,7 @@ ipcMain.handle("getplugindir",async(event,message) =>{
         var i;
         for (i=0;i<filelist.length;i++){
           data = fs.readFileSync(file_path + "/" + filelist[i]).toString()
+          data = data.replaceAll(/[\n\r]/g,"")
           data = JSON.parse(data)
           data['filename'] = filelist[i] 
           plugindata.push(data)

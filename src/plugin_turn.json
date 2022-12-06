@@ -1,0 +1,51 @@
+{
+    "id":"turn",
+    "name":"换手率",
+    "description":"换手率公式，通过换手率大小判断此股的活跃性",
+    "author":"asmcos",
+    "url":"https://www.klang.org.cn",
+    "html":["<div class='box'>",
+          "<div class='box-header with-border'>",
+            "<div class='demo-checkbox'>",
+								"<input type='checkbox' id='md_checkbox_25{0}' class='filled-in chk-col-danger' checked='' v-model='sourcelist.{0}.select'>",
+								"<label for='md_checkbox_25{0}'><h4 class='box-title'>{1}</h4></label>",
+								"<label style='margin-left: 10px;margin-right: 5px; min-width: 40px;width:auto;'>大于:</label>",	
+								"<input class='filled-in chk-col-success'  type='number' name='number' v-model='sourcelist.{0}.objturn'>",
+							"</div>",
+						"</div>",
+						"<div class='box-body' v-if='sourcelist.{0}.select'>",
+							"<div class='demo-radio-button'>",
+								"<input name='group9{0}' type='radio' id='radio_935{0}' class='with-gap radio-col-warning' v-model='sourcelist.{0}.period' value='T'>",
+								"<label for='radio_935{0}'>日线</label>",
+								"<input name='group9{0}' type='radio' id='radio_932{0}' class='with-gap radio-col-success' v-model='sourcelist.{0}.period' value='WT'>",
+								"<label for='radio_932{0}'>周线</label>",
+								"<input name='group9{0}' type='radio' id='radio_933{0}' class='with-gap radio-col-info' v-model='sourcelist.{0}.period' value='MT'>",
+								"<label for='radio_933{0}'>月线</label>",
+
+                                "</div>",
+                                "</div>",
+             "</div>"],
+    "sourceconf":{
+        "title":"### 换手率计算公式 (3个周期有任意周期满足大于已填换手率的值)  ###\n",
+        "code":["
+        ret = 0\n
+        if PERIOD > objturn or  PERIOD[1] > objturn or  PERIOD[2] > objturn:\n
+            ret = 1\n
+        if ret == 0:\n
+            kstop\n
+        "],
+        "period":"T",
+        "objturn":20,
+        "select":true
+    },
+    "watch":["peroid","select","objturn"],
+    "exec_code":["
+        if (that.sourcelist.{0}.select == true) {
+             code += that.sourcelist.{0}.title;
+             code += 'PERIOD = ' + that.sourcelist.{0}.period  + ';\\n';
+             code += 'objturn = ' + that.sourcelist.{0}.objturn + ';\\n';
+             code += that.sourcelist.{0}.code ;
+             
+        }"]
+    
+}

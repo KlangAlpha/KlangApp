@@ -1,0 +1,47 @@
+{
+    "id":"vol",
+    "name":"成交量放大",
+    "description":"通过成交量放大获取符合的股票",
+    "author":"asmcos",
+    "url":"https://www.klang.org.cn",
+    "html":["<div class='box'>",
+          "<div class='box-header with-border'>",
+            "<div class='demo-checkbox'>",
+								"<input type='checkbox' id='md_checkbox_25{0}' class='filled-in chk-col-danger' checked='' v-model='sourcelist.{0}.select'>",
+								"<label for='md_checkbox_25{0}'><h4 class='box-title'>{1}</h4></label>",
+							"</div>",
+						"</div>",
+						"<div class='box-body' v-if='sourcelist.{0}.select'>",
+							"<div class='demo-radio-button'>",
+								"<input name='group9{0}' type='radio' id='radio_935{0}' class='with-gap radio-col-warning' v-model='sourcelist.{0}.period' value='V'>",
+								"<label for='radio_935{0}'>日线</label>",
+								"<input name='group9{0}' type='radio' id='radio_932{0}' class='with-gap radio-col-success' v-model='sourcelist.{0}.period' value='WV'>",
+								"<label for='radio_932{0}'>周线</label>",
+								"<input name='group9{0}' type='radio' id='radio_933{0}' class='with-gap radio-col-info' v-model='sourcelist.{0}.period' value='MV'>",
+								"<label for='radio_933{0}'>月线</label>",
+
+                                "</div>",
+                                "</div>",
+             "</div>"],
+    "sourceconf":{
+        "title":"###  筛选成交大量放大的股票 ###\n",
+        "code":["
+        ret = 0\n
+        ma10vol = MA(PERIOD[1],10)\n
+        ma10vol = ma10vol * 2\n
+        if PERIOD < ma10vol:\n
+           kstop;\n
+        "],
+        
+        "period":"V",
+        "select":true
+    },
+    "watch":["peroid","select"],
+    "exec_code":["
+        if (that.sourcelist.{0}.select == true) {
+             code += that.sourcelist.{0}.title;
+             code += 'PERIOD = ' + that.sourcelist.{0}.period  + ';\\n';
+             code += that.sourcelist.{0}.code ;             
+        }"]
+    
+}
