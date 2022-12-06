@@ -96,6 +96,9 @@ async function getdefaultconfs (){
 ipcRenderer.on('confs', async (event, message) => {
    confs = JSON.parse(message)
    //不能直接赋值，防止覆盖插件部分。
+   vue.strategysavetitle    = confs.title
+   vue.strategysavecontent  = confs.content
+   vue.strategysavefilename = confs.filename
    keys = Object.keys(confs.sourcelist)
    keys.forEach(function(k){
       vue.sourcelist[k] = confs.sourcelist[k]
@@ -153,6 +156,13 @@ ipcRenderer.on('plugindir', async (event, message) => {
   
 })
 
+
+//main.js 相应 getstrategylist 的调用，返回数据
+ipcRenderer.on('getstrategylist', async (event, message) => {
+   
+   strategyinit(message)
+  
+})
 
 //get session
 async function get_cookies(domain){

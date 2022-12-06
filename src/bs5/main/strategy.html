@@ -30,8 +30,10 @@
                           <div class="modal-footer">
                               <div class="pull-right">
                                   <button   class="btn btn-default" style="margin-right: 10px;" @click="close_strategy"><i class="fa fa-pencil"></i> 取消</button>
+                                  <button   class="btn btn-success" style="margin-right: 10px;" @click="save_as_strategy"><i class="fa fa-envelope-o"></i>另保存</button>
                                   <button   class="btn btn-success" @click="save_strategy"><i class="fa fa-envelope-o"></i>保存</button>
                               </div>
+                              <sapn>策略文件名:{{strategysavefilename}}</span>
                               <!--button type="reset" class="btn btn-danger"><i class="fa fa-times"></i> Discard</button>
                               <button type="button" class="btn btn-danger text-start" data-bs-dismiss="modal">Close</button-->
                           </div>
@@ -50,13 +52,11 @@
                     </ul>
                   </div>
                   <div class="box-body no-padding mailbox-nav">
-                    <ul class="nav nav-pills flex-column">
-                      <li class="nav-item"><a class="nav-link active"  > 我的第一个策略
+                    <ul class="nav nav-pills flex-column" v-for="(item,index) in strategyArray">
+                      <li class="nav-item" v-if="active == index" @click="select_strategy(item,index)"><a class="nav-link active"  > {{item.title}}
                         </a></li>
-                      <li class="nav-item"><a class="nav-link"  > 横盘突破</a></li>
-                      <li class="nav-item"><a class="nav-link"  > 步步高升</a></li>
-                      <li class="nav-item"><a class="nav-link"  > 老鸭头</a></li>
-                      <li class="nav-item"><a class="nav-link"  > 三涨停回调</a></li>
+                      <li class="nav-item" v-else  @click="select_strategy(item,index)"><a class="nav-link"  > {{item.title}}</a></li>
+
 
                     </ul>
                   </div>
@@ -102,6 +102,7 @@
 
   $(document).ready(async function(){
 
+      await ipcRenderer.invoke("getstrategylist","")
 
       function strategyinit(message){
           strategydata = JSON.parse(message)
@@ -119,7 +120,7 @@
       }
       window.strategyinit = strategyinit
 
-     
+      
   })
 </script>
 

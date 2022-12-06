@@ -31,7 +31,7 @@ function save_strategy_file(filename,content){
 
 }
 
-ipcMain.handle("savestrategy",async(event,message) =>{
+ipcMain.handle("saveasstrategy",async(event,message) =>{
 
   filecontent = JSON.parse(message)
  
@@ -53,6 +53,21 @@ ipcMain.handle("savestrategy",async(event,message) =>{
     fs.writeFileSync(filename.filePath ,JSON.stringify(filecontent)) 
   }
 
+  
+})
+
+ipcMain.handle("savestrategy",async(event,message) =>{
+
+  filecontent = JSON.parse(message)
+ 
+  user_home = app.getPath('home')
+
+  defpath = user_home + "/.klang/strategy/" + filecontent.filename
+
+  delete filecontent['filename']
+  
+   
+  fs.writeFileSync(defpath ,JSON.stringify(filecontent)) 
   
 })
 

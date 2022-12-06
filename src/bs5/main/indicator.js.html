@@ -26,7 +26,9 @@ $(document).ready(async function(){
              },
              strategysavetitle:"",
              strategysavecontent:"",
+             strategysavefilename:"",
              strategyArray:[],
+             active:0,
              runconfs:{
                  showcode:false,
                  klangserver:false,
@@ -54,16 +56,39 @@ $(document).ready(async function(){
        },
        methods: {
         save_strategy:async function(){
-            confs = {'title':this.strategysavetitle,"content":this.strategysavecontent}
+            confs = {'title':this.strategysavetitle,"content":this.strategysavecontent,"filename":this.strategysavefilename}
             confs.sourcelist = vue.sourcelist
             confs.runconfs  = vue.runconfs
             await ipcRenderer.invoke('savestrategy',JSON.stringify(confs));
             $('.modal-backdrop').hide()
             $("#savewindow").hide()
+            window.location.reload()
+        },
+        save_as_strategy:async function(){
+            confs = {'title':this.strategysavetitle,"content":this.strategysavecontent}
+            confs.sourcelist = vue.sourcelist
+            confs.runconfs  = vue.runconfs
+            await ipcRenderer.invoke('saveasstrategy',JSON.stringify(confs));
+            $('.modal-backdrop').hide()
+            $("#savewindow").hide()
+            window.location.reload()
         },
         close_strategy:function(){
             $('.modal-backdrop').hide()
             $("#savewindow").hide()
+        },
+        select_strategy:function(item,index){
+            var that = this
+            this.strategysavetitle    = item.title
+            this.strategysavecontent  = item.content
+            this.strategysavefilename = item.filename
+            this.active = index
+            keys = Object.keys(item.sourcelist)
+            keys.forEach(function(k){
+                that.sourcelist[k] = item.sourcelist[k]
+            })
+   
+            that.runconfs = item.runconfs
         },
          openbrowser:function(event){
              url = event.target.href

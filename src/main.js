@@ -228,6 +228,29 @@ ipcMain.handle("getplugindir",async(event,message) =>{
     }catch{}
 })
 
+//策略页面显示策略列表
+ipcMain.handle('getstrategylist',async(e,m) =>{
+  user_home = app.getPath('home')
+  file_path = user_home + "/.klang/strategy"
+  
+  try{
+    filelist = fs.readdirSync(file_path)
+    var strategydata = []
+    console.log(filelist);
+    var i;
+    for (i=0;i<filelist.length;i++){
+      data = fs.readFileSync(file_path + "/" + filelist[i]).toString()
+       
+      data = JSON.parse(data)
+      data['filename'] = filelist[i] 
+      strategydata.push(data)
+    }
+    //返回给 策略页面，事件名称一样，但是这是返回数据
+    app.mainWin.webContents.send('getstrategylist',JSON.stringify(strategydata))
+}catch{}
+
+})
+
 
 // 控制新窗口
 function win_event(win){

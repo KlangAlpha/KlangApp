@@ -44,7 +44,7 @@ const template = [
             }
         }
       },
-      {
+      /*{
         label:"保存配置文件",
         click:async()=>{
           user_home = app.getPath('home')
@@ -65,7 +65,7 @@ const template = [
             app.mainWin.webContents.send('savefile',filename.filePath)
           }
         }
-      },
+      },*/
       {
         label:"插件设置",
         click:async()=>{
