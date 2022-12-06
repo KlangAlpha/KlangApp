@@ -24,6 +24,9 @@ $(document).ready(async function(){
                sourcelist:{
                 
              },
+             strategysavetitle:"",
+             strategysavecontent:"",
+             strategyArray:[],
              runconfs:{
                  showcode:false,
                  klangserver:false,
@@ -50,8 +53,18 @@ $(document).ready(async function(){
          this.make_code()
        },
        methods: {
-
-
+        save_strategy:async function(){
+            confs = {'title':this.strategysavetitle,"content":this.strategysavecontent}
+            confs.sourcelist = vue.sourcelist
+            confs.runconfs  = vue.runconfs
+            await ipcRenderer.invoke('savestrategy',JSON.stringify(confs));
+            $('.modal-backdrop').hide()
+            $("#savewindow").hide()
+        },
+        close_strategy:function(){
+            $('.modal-backdrop').hide()
+            $("#savewindow").hide()
+        },
          openbrowser:function(event){
              url = event.target.href
              event.preventDefault();
@@ -202,11 +215,6 @@ $(document).ready(async function(){
 
 
      } //new connect
-
-
-
-
-
 
      function send_task(){
              vue.$data.result = []

@@ -31,13 +31,29 @@ function save_strategy_file(filename,content){
 
 }
 
-ipcMain.handle("savestrategyfile",async(event,message) =>{
+ipcMain.handle("savestrategy",async(event,message) =>{
 
   filecontent = JSON.parse(message)
-  filename = filecontent['filename']
-  delete filecontent['filename']
+ 
+  user_home = app.getPath('home')
 
-  save_strategy_file(filename,JSON.stringify(filecontent))
+  defpath = user_home + "/.klang/strategy/config.json"
+
+  if  (process.platform == 'win32'){
+      defpath = user_home + '\\.klang\\strategy\\config.json'
+  }
+  
+  filename = await dialog.showSaveDialog({ properties: ['openFile'],
+  filters: [{ name: 'Json', extensions: ['json'] }],
+  defaultPath: defpath,
+  })
+
+  console.log(filename.filePath)
+  if (filename.filePath.length > 0 ){
+    fs.writeFileSync(filename.filePath ,JSON.stringify(filecontent)) 
+  }
+
+  
 })
 
 ipcMain.handle("removestrategy",async(e,message)=>{

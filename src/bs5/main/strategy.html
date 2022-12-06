@@ -9,7 +9,7 @@
             <div class="col-xl-3 col-lg-6 col-12">
                 <button class="btn btn-danger w-p100 mb-30" type="button" alt="default" data-bs-toggle="modal" data-bs-target=".bs-example-modal-lg">保存策略</button>
 
-                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="savewindow" style="display: none;">
                   <div class="modal-dialog modal-lg">
                       <div class="modal-content">
                           <div class="modal-header">
@@ -19,18 +19,18 @@
                           <div class="modal-body">
  
                                 <div class="form-group">
-                                  <input class="form-control" placeholder="标题">
+                                  <input class="form-control" placeholder="标题" v-model="strategysavetitle">
                                 </div>
                                 <div class="form-group">
                                      <h4>策略描述</h4>
-                                      <textarea id="compose-textarea" class="form-control" style="height: 300px;"></textarea>
+                                      <textarea id="compose-textarea" class="form-control" style="height: 300px;" v-model="strategysavecontent"></textarea>
                                     </div>
                              
                           </div>
                           <div class="modal-footer">
                               <div class="pull-right">
-                                  <button   class="btn btn-default" style="margin-right: 10px;"><i class="fa fa-pencil"></i> 取消</button>
-                                  <button   class="btn btn-success"><i class="fa fa-envelope-o"></i>保存</button>
+                                  <button   class="btn btn-default" style="margin-right: 10px;" @click="close_strategy"><i class="fa fa-pencil"></i> 取消</button>
+                                  <button   class="btn btn-success" @click="save_strategy"><i class="fa fa-envelope-o"></i>保存</button>
                               </div>
                               <!--button type="reset" class="btn btn-danger"><i class="fa fa-times"></i> Discard</button>
                               <button type="button" class="btn btn-danger text-start" data-bs-dismiss="modal">Close</button-->
@@ -76,7 +76,7 @@
                     </div>
                   </div>
                   <!-- /.box-header -->
-                  <div class="box-body">
+                  <div class="box-body" >
 
                     {% include "./indicator.html" %}
                   </div>
@@ -95,70 +95,36 @@
 
 {% block externjs %}
 
+{%include "./indicator.js.html" %}
+
 
 <script>
 
-    $(document).ready(async function(){
-
-        apihost="https://www.klang.org.cn"
-  
-    
- 
-	  
-	  
-
-        const VueApp = {
-            data() {
-                return {
-                    strategyArray:[],
-                     
+  $(document).ready(async function(){
 
 
-                }
-            },
+      function strategyinit(message){
+          strategydata = JSON.parse(message)
 
-            created() {
-                
-            },
+          var i,length = strategydata.length;
 
-            mounted () {
-                var that = this
- 
-            },
-            methods: {
-                configs(e){
+          // 1. html
+          
+          for (i=0;i<length;i++)
+          {
+              vue.$data.strategyArray.push(strategydata[i])
+          }
 
-                },
-               
 
-    
-                async handler_enable(item,val){
-                    item.enable = val
-                    await ipcRenderer.invoke('savepluginfile',JSON.stringify(item)); 
-                }
-            }
-        }//VueApp
-        window.vue = Vue.createApp(VueApp).mount('#app1')
+      }
+      window.strategyinit = strategyinit
 
-        function strategyinit(message){
-            strategydata = JSON.parse(message)
- 
-            var i,length = strategydata.length;
-
-            // 1. html
-            
-            for (i=0;i<length;i++)
-            {
-                vue.$data.strategyArray.push(strategydata[i])
-            }
-        }
-        window.strategyinit = strategyinit
-
-        await getstrategydir();
-    })
+     
+  })
 </script>
 
-{%include "./indicator.js.html" %}
+
+
 
 
 {% endblock %}
