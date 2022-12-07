@@ -96,9 +96,8 @@ async function getdefaultconfs (){
 ipcRenderer.on('confs', async (event, message) => {
    confs = JSON.parse(message)
    //不能直接赋值，防止覆盖插件部分。
-   vue.strategysavetitle    = confs.title
-   vue.strategysavecontent  = confs.content
-   vue.strategysavefilename = confs.filename
+
+
    keys = Object.keys(confs.sourcelist)
    keys.forEach(function(k){
       vue.sourcelist[k] = confs.sourcelist[k]

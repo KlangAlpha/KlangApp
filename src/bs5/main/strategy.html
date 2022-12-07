@@ -114,8 +114,14 @@
           for (i=0;i<length;i++)
           {
               vue.$data.strategyArray.push(strategydata[i])
+              //2. 选择默认的策略
+              if (i == 0){
+                vue.select_strategy(vue.$data.strategyArray[0],0)
+              }
           }
-
+          
+          
+          
 
       }
       window.strategyinit = strategyinit

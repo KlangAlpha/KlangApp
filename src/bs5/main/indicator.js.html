@@ -60,8 +60,7 @@ $(document).ready(async function(){
             confs.sourcelist = vue.sourcelist
             confs.runconfs  = vue.runconfs
             await ipcRenderer.invoke('savestrategy',JSON.stringify(confs));
-            $('.modal-backdrop').hide()
-            $("#savewindow").hide()
+            $(".btn-close").click()
             window.location.reload()
         },
         save_as_strategy:async function(){
@@ -69,13 +68,11 @@ $(document).ready(async function(){
             confs.sourcelist = vue.sourcelist
             confs.runconfs  = vue.runconfs
             await ipcRenderer.invoke('saveasstrategy',JSON.stringify(confs));
-            $('.modal-backdrop').hide()
-            $("#savewindow").hide()
+            $(".btn-close").click()
             window.location.reload()
         },
         close_strategy:function(){
-            $('.modal-backdrop').hide()
-            $("#savewindow").hide()
+            $(".btn-close").click()
         },
         select_strategy:function(item,index){
             var that = this

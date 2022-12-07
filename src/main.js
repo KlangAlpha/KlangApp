@@ -242,8 +242,16 @@ ipcMain.handle('getstrategylist',async(e,m) =>{
       data = fs.readFileSync(file_path + "/" + filelist[i]).toString()
        
       data = JSON.parse(data)
-      data['filename'] = filelist[i] 
-      strategydata.push(data)
+      data['filename'] = filelist[i]
+
+      // config.json 放在第一个，默认策略
+
+      if (filelist[i] == "config.json"){
+        strategydata = [data].concat(strategydata)
+      } else {
+        strategydata.push(data)
+      }
+      
     }
     //返回给 策略页面，事件名称一样，但是这是返回数据
     app.mainWin.webContents.send('getstrategylist',JSON.stringify(strategydata))
