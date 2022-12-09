@@ -52,6 +52,7 @@ ipcRenderer.on('status', (event, message) => {
     var content = $("#server_status_stderr").html();
 
     $("#server_status_stderr").html(content + message);
+    vue.$data.log_event ^= 1;
 
  })
 //调用 main.js 函数，很多实现在python.js里面

@@ -77,7 +77,10 @@
 												<span class="badge badge-pill badge-warning" >等待启动..</span>
 											</td>
 											<td class="fw-600 fs-16 min-w-150 text-center"><i class="fa fa-fw fa-circle text-light fs-12" style="visibility: hidden"></i> 股票数据</td>
-											<td class="fw-600 fs-16 min-w-150 text-center" id="updatedata"><a class="btn btn-flat btn-info">更新数据</a></td>
+											<td class="fw-600 fs-16 min-w-150 text-center" id="updatedata"><a class="btn btn-flat btn-info">
+												<font color="red" v-if="log_event">更新数据</font>
+												<font v-else>更新数据</font>
+											</a></td>
 											<td class="fw-400 fs-16 min-w-150 text-center" id="downloaddata"><a class="btn btn-flat btn-warning">覆盖全部数据</a></td>
 										</tr>
 									</tbody>
@@ -200,6 +203,8 @@
 				  toask:"",			
 				  result:[],
 				  server_count:0,
+				  log_event:0,
+				  log_tid:"",
 				  pages:{
 					page:[],
 					curnum:0,
@@ -271,10 +276,23 @@
 				
 				this.sourcecode = code 
 
+			},
+			reset_logevent:function(){
+				this.log_event = 0
+				this.log_tid   = "";
 			}
 		  },
 		  watch:{
 
+			log_event:function(newval,old){
+
+				if (this.log_tid != ""){
+					//清除上一次timeout，
+					clearTimeout(this.log_tid)
+				}
+				//保留最后一次timeout即可，也就是事件完成后必须恢复成默认值
+				this.log_tid = setTimeout(this.reset_logevent,3000)
+			},
 			"runconfs.klangdate":function(newval,old){
 				var today = new Date();
 			    this.runconfs.inputdate = today.toLocaleDateString().replaceAll("/","-");
