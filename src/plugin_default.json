@@ -29,7 +29,7 @@
              "</div>"],
     "sourceconf":{
         "title":"###  涨停公式  ###\n",
-        "code":["ret{0} = 0 \n",
+        "code":[
             "ret = (PERIOD_RISE - PERIOD_RISE[1]) / PERIOD_RISE[1]\n",
             "ret = ret * 100 \n",
             "if ret < riseobjval:\n",
@@ -43,8 +43,8 @@
     "exec_code":[
         "if (that.sourcelist.{0}.select == true) {",
             " code += that.sourcelist.{0}.title;",
-            " code += 'PERIOD_RISE = ' + that.sourcelist.{0}.period  + ';';",
-            " code += 'riseobjval = ' + that.sourcelist.{0}.objval  +';';",
+            " code += 'PERIOD_RISE = ' + that.sourcelist.{0}.period  + ';\\n';",
+            " code += 'riseobjval = ' + that.sourcelist.{0}.objval  +';\\n';",
             " code += that.sourcelist.{0}.code ;",
              
         "}"

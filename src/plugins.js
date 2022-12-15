@@ -73,7 +73,13 @@ async function list_request(url){
 
     if (ret != - 1){
       await app.mainWin.webContents.send('installinfo','下载成功')
-      save_plugin_file(item.path,JSON.stringify(ret.data))
+      if (typeof ret.data == "string"){
+        data = ret.data 
+      } else {
+        data  = JSON.stringify(ret.data)
+      }
+
+      save_plugin_file(item.path,data)
     } else {
 
       await app.mainWin.webContents.send('installinfo','下载失败')
