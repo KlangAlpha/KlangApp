@@ -1,7 +1,7 @@
 {
     "id":"vol",
     "name":"成交量放大",
-    "description":"通过成交量放大获取符合的股票",
+    "description":"通过成交量放大获取符合的股票,红柱放大",
     "author":"asmcos",
     "url":"https://www.klang.org.cn",
     "html":["<div class='box'>",
@@ -30,6 +30,8 @@
         ma10vol = MA(PERIOD[1],10)\n
         ma10vol = ma10vol * 2\n
         if PERIOD < ma10vol:\n
+           kstop;\n
+        if PERIOD < PERIOD[1]:\n 
            kstop;\n
         "],
         
