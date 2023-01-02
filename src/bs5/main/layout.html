@@ -130,7 +130,7 @@
 		  </li>
 		</ul>
     </div>
-	  &copy;2017 - 2022 <a href="https://klang.org.cn">Klang</a>. All Rights Reserved.
+	  &copy;2017 - <span id="cur_year">2024</span> <a href="https://klang.org.cn">Klang</a>. All Rights Reserved.
   </footer>
 
   <!-- Control Sidebar -->
@@ -458,6 +458,9 @@
 			console.log("click")
 			//open_newWin('./server_status.html'); 
 		}
+		let cur_year = new Date().getFullYear();
+		document.querySelector('#cur_year').innerHTML = cur_year;
+
 	})
 	</script>
 
