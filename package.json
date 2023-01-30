@@ -38,10 +38,12 @@
       "packagerConfig": {},
       "makers": [
         {
+          
           "name": "@electron-forge/maker-wix",
           "config": {
             "upgradeCode": "57e14074-6883-11ed-b3ff-fb7d7833cd9a",
             "language": 1033,
+            "icon":"./src/icons/win/icon.ico",
             "manufacturer": "Klang.org.cn"
           }
         },
@@ -49,7 +51,10 @@
           "name": "@electron-forge/maker-zip",
           "platforms": [
             "darwin"
-          ]
+          ],
+          "config":{
+            "icon":"./src/icons/mac/icon.icns"
+          }
         },
         {
           "name": "@electron-forge/maker-deb",

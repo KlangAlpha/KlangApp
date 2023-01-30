@@ -13,12 +13,16 @@ require("@electron/remote/main").initialize()
 
 app.commandLine.hasSwitch('disable-gpu')
 
+ //platform == win32
+ 
+root_path = path.join(__dirname) 
+icopath = root_path + '/icons/win/icon.ico'
 
 function createWindow () {
   const win = new BrowserWindow({
     width: 1440,
     height: 900,
-  
+    icon: icopath,
    
     webPreferences: {
  
@@ -30,6 +34,8 @@ function createWindow () {
     }
   })
 
+ 
+   
 
   // 现在不使用 download 功能，之前是为了下载python
   // download_init(win);
