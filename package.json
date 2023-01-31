@@ -31,6 +31,7 @@
     "@electron/remote": "^2.0.8",
     "axios": "^1.2.0",
     "electron-find": "^1.0.7",
+    "exe-icon-extractor": "^1.0.8",
     "iconv-lite": "^0.6.3"
   },
   "config": {
@@ -38,12 +39,11 @@
       "packagerConfig": {},
       "makers": [
         {
-          
           "name": "@electron-forge/maker-wix",
           "config": {
             "upgradeCode": "57e14074-6883-11ed-b3ff-fb7d7833cd9a",
             "language": 1033,
-            "icon":"./src/icons/win/icon.ico",
+            "icon": "./src/icons/win/icon.ico",
             "manufacturer": "Klang.org.cn"
           }
         },
@@ -52,8 +52,8 @@
           "platforms": [
             "darwin"
           ],
-          "config":{
-            "icon":"./src/icons/mac/icon.icns"
+          "config": {
+            "icon": "./src/icons/mac/icon.icns"
           }
         },
         {
