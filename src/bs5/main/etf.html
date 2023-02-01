@@ -193,17 +193,20 @@
    
 
    async function getDatas(that){
-
-         response = await axios.get(apihost+"/data/Net/info/ETF_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html")
-
+     var response ;
+         try {
+         response = await axios.get(apihost+"/data/Net/info/ETF_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html",{
+             timeout: 5000
+         })
+        } catch (error){
+            
+            getDatas(that)
+        }
          content = document.getElementById('content')
          console.log(response.data)
          vue.$data.etflist = response.data
    
          that.load = 1
-
-
-       
         
          that.stocklist = tostocklist(that)
          getstocks(that)
