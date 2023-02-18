@@ -74,7 +74,7 @@ function exec_status (cmd,args,isshell){
 
         }
         
-        server_status += date.toString() +": "+ data.toString()+"\n";
+        server_status = date.toString() +": "+ data.toString()+"\n" + server_status;
     });
 
     // python 进度条库使用stderr作为输入出。
@@ -92,7 +92,7 @@ function exec_status (cmd,args,isshell){
 
         }
         
-        server_status_stderr += date.toString() +": "+ data.toString()+"\n";
+        server_status_stderr = date.toString() +": "+ data.toString()+"\n" + server_status_stderr;
     });
     return handle
 }

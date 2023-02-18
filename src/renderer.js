@@ -44,14 +44,14 @@ ipcRenderer.on('status', (event, message) => {
    
     var content = $("#server_status").html();
 
-    $("#server_status").html(content + message);
+    $("#server_status").html(message+ content);
 
  })
  ipcRenderer.on('status_stderr', (event, message) => {
    
     var content = $("#server_status_stderr").html();
 
-    $("#server_status_stderr").html(content + message);
+    $("#server_status_stderr").html(message + content);
     vue.$data.log_event ^= 1;
 
  })
