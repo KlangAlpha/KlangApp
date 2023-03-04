@@ -154,7 +154,7 @@
 							<tr v-for="(item,index) in result" >
 							<th scope="row" >{{index+1}}</th>
 							<td><a v-bind:href="'https://klang.org.cn/kline.html?code='+item.code" target=_blank @click="openbrowser($event)">{{item.name}}</a></td>
-							<td><a v-bind:href="'https://gu.qq.com/'+item.code" target=_blank @click="openbrowser($event)"><font color=blue>{{item.code}}</font></a></td>
+							<td><font color=blue><a v-bind:href="'https://klang.org.cn/kline.html?code='+item.code" target=_blank @click="openbrowser($event)">{{item.code}}</a></font></td>
 							<td>{{item.value}}</td>
 							<td>{{item.hqltsz}}</td>
 							<td>{{item.tdxbk}}</td>
@@ -243,8 +243,10 @@
 
 
 			openbrowser:function(event){
+				console.log(event);
 				url = event.target.href
 				event.preventDefault();
+				
 				shell.openExternal(url);
 			},
 			make_code(){
