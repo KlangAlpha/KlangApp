@@ -62,7 +62,12 @@ ipcMain.handle("savestrategy",async(event,message) =>{
  
   user_home = app.getPath('home')
 
+  
   defpath = user_home + "/.klang/strategy/" + filecontent.filename
+
+  if  (process.platform == 'win32'){
+    defpath = user_home + "\\.klang\\strategy\\" + filecontent.filename
+  }
 
   delete filecontent['filename']
   
@@ -78,6 +83,11 @@ ipcMain.handle("removestrategy",async(e,message)=>{
   console.log(filename)
 
   file_path = user_home + "/.klang/strategy" 
+  
+  if  (process.platform == 'win32'){
+    file_path = user_home + "\\.klang\\strategy" 
+  }
+
   fs.unlinkSync(file_path + "/" + filename)
 })
 async function list_request(url){

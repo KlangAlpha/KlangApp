@@ -74,6 +74,10 @@ $(document).ready(async function(){
         close_strategy:function(){
             $(".btn-close").click()
         },
+        del_strategy:async function(filename){
+            await ipcRenderer.invoke('removestrategy',JSON.stringify({filename:filename}));
+            window.location.reload()
+        },
         select_strategy:function(item,index){
             var that = this
             this.strategysavetitle    = item.title
