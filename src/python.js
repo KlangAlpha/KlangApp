@@ -136,9 +136,9 @@ ipcMain.handle('download_data_zip',async (event, message) => {
 
 function download_data_zip(){
     if(isWin){
-        exec_status(root_path +"\\Klang\\dist\\dowload.exe",[],false)
+        exec_status(root_path +"\\Klang\\dist\\download\\download.exe",[],false)
     } else {
-        exec_status(root_path +"/Klang/dist/dowload",[],false)
+        exec_status(root_path +"/Klang/dist/download/download",[],false)
     }
    
 }
