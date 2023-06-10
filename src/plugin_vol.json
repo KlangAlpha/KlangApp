@@ -4,25 +4,25 @@
     "description":"通过成交量放大获取符合的股票,红柱放大",
     "author":"asmcos",
     "url":"https://www.klang.org.cn",
-    "html":["<div class='box'>",
-          "<div class='box-header with-border'>",
-            "<div class='demo-checkbox'>",
-								"<input type='checkbox' id='md_checkbox_25{0}' class='filled-in chk-col-danger' checked='' v-model='sourcelist.{0}.select'>",
-								"<label for='md_checkbox_25{0}'><h4 class='box-title'>{1}</h4></label>",
-							"</div>",
-						"</div>",
-						"<div class='box-body' v-if='sourcelist.{0}.select'>",
-							"<div class='demo-radio-button'>",
-								"<input name='group9{0}' type='radio' id='radio_935{0}' class='with-gap radio-col-warning' v-model='sourcelist.{0}.period' value='V'>",
-								"<label for='radio_935{0}'>日线</label>",
-								"<input name='group9{0}' type='radio' id='radio_932{0}' class='with-gap radio-col-success' v-model='sourcelist.{0}.period' value='WV'>",
-								"<label for='radio_932{0}'>周线</label>",
-								"<input name='group9{0}' type='radio' id='radio_933{0}' class='with-gap radio-col-info' v-model='sourcelist.{0}.period' value='MV'>",
-								"<label for='radio_933{0}'>月线</label>",
-
-                                "</div>",
-                                "</div>",
-             "</div>"],
+    "html":[    "<div class='media align-items-center'>",
+    "<input type='checkbox' id='md_checkbox_21{0}' class='filled-in chk-col-danger' checked=''  v-model='sourcelist.{0}.select' >",
+    "<label for='md_checkbox_21{0}' style='margin:0px 0px 0px 0px;min-width: 35px;'></label>",	           
+    "<span class='badge badge-dot badge-info'></span>",
+    "<div class='media-body text-truncate'>",
+    "{1}",
+     "</div>", 
+    "<div class='fc-right' v-if='sourcelist.{0}.select'>",
+    
+     "<div class='c-inputs-stacked'>",
+      "<input name='group4{0}' type='radio' id='radio_1{0}'  class='radio-col-info' v-model='sourcelist.{0}.period' value='V'>",
+      "<label for='radio_1{0}' style='padding-left: 22px;margin-right: 8px;'>日</label>",
+      "<input name='group4{0}' type='radio' id='radio_2{0}'  class='radio-col-danger' v-model='sourcelist.{0}.period' value='WV'>",
+      "<label for='radio_2{0}' style='padding-left: 22px;margin-right: 8px;'>周</label>",
+      "<input name='group4{0}' type='radio' id='radio_3{0}' class='radio-col-primary' v-model='sourcelist.{0}.period' value='MV'>",
+      "<label for='radio_3{0}' style='padding-left: 22px; '>月</label>",
+     "</div>",
+    "</div>",
+    "</div>"],
     "sourceconf":{
         "title":"###  筛选成交大量放大的股票 ###\n",
         "code":["
@@ -38,7 +38,7 @@
         "period":"V",
         "select":true
     },
-    "watch":["peroid","select"],
+    "watch":["period","select"],
     "exec_code":["
         if (that.sourcelist.{0}.select == true) {
              code += that.sourcelist.{0}.title;

@@ -154,9 +154,11 @@ ipcMain.handle("getplugin",async(event,message) =>{
   //1. 读取默认的plugin
   try{
    
-    data = fs.readFileSync(root_path + "/plugin_macd.json").toString()
+    data = fs.readFileSync(root_path + "/plugin_macd_new.json").toString()
     data = data.replaceAll(/[\n\r]/g,"")
     plugindata.push(JSON.parse(data))
+   
+
  
     data = fs.readFileSync(root_path + "/plugin_macdrelay.json").toString()
     data = data.replaceAll(/[\n\r]/g,"")
@@ -178,13 +180,13 @@ ipcMain.handle("getplugin",async(event,message) =>{
     data = fs.readFileSync(root_path + "/plugin_ma.json").toString()
     data = data.replaceAll(/[\n\r]/g,"")
     plugindata.push(JSON.parse(data))
-
+    
     data = fs.readFileSync(root_path + "/plugin_default.json").toString()
     data = data.replaceAll(/[\n\r]/g,"")
     plugindata.push(JSON.parse(data))
+    
 
-
-  } catch{}
+  } catch(error){console.log(error)}
   
   //2. 读取安装的 plugins
   user_home = app.getPath('home')

@@ -1,17 +1,17 @@
 {
-    "id":"rise_top",
-    "name":"涨停",
-    "description":"涨停算法",
+    "id":"macd",
+    "name":"MACD金叉(3日内出现金叉)",
+    "description":"通过MACD金叉判断是否是符合买点条件",
     "author":"asmcos",
     "url":"https://www.klang.org.cn",
-    "html":["
-    <div class='media align-items-center'>",
+    "html": ["<div class='media align-items-center'>",
              "<input type='checkbox' id='md_checkbox_21{0}' class='filled-in chk-col-danger' checked=''  v-model='sourcelist.{0}.select' >",
              "<label for='md_checkbox_21{0}' style='margin:0px 0px 0px 0px;min-width: 35px;'></label>",	           
-             "<span class='badge badge-dot badge-danger'></span>",
+             "<span class='badge badge-dot badge-info'></span>",
              "<div class='media-body text-truncate'>",
              "{1}",
-             "<span  style='margin-left:70px;' v-if='sourcelist.{0}.select'>上涨幅度</span><input v-if='sourcelist.{0}.select' style='margin-left:20px;' type='number' name='number' v-model='sourcelist.{0}.objval'>",
+             "<input type='checkbox' id='md_checkbox_211{0}' class='filled-in chk-col-info' checked='' v-model='sourcelist.{0}.dea' v-if='sourcelist.{0}.select'>",
+             "<label for='md_checkbox_211{0}' style='margin-left: 50px;' v-if='sourcelist.{0}.select'> 0轴上方 </label>",
              "</div>", 
              "<div class='fc-right' v-if='sourcelist.{0}.select'>",
              
@@ -24,31 +24,34 @@
                "<label for='radio_3{0}' style='padding-left: 22px; '>月</label>",
               "</div>",
              "</div>",
-             "</div>"
-    ],
+             "</div>"],
     "sourceconf":{
-        "title":"###  涨停公式  ###\n",
+        "title":"###  MACD金叉买入法  ###\n",
         "code":[
-            "ret = (PERIOD_RISE - PERIOD_RISE[1]) / PERIOD_RISE[1]\n",
-            "ret = ret * 100 \n",
-            "if ret < riseobjval:\n",
-            "   kstop\n"],
+            "diff, dea, macd = MACD(PERIOD);\n
+            ret = CROSS(diff,dea) \n
+            ret{0} = 0 ; \n
+            if ret or ret[1] or ret[2] :\n
+                ret{0} = 1 \n
+            if ret{0} == 0: \n    
+                kstop;\n
+            "],
         
         "period":"C",
-        "select":true,
-        "objval":9.9
+        "dea":true,
+        "select":true
     },
-    "watch":["period","select","objval"],
-    "exec_code":[
-        "if (that.sourcelist.{0}.select == true) {",
-            " code += that.sourcelist.{0}.title;",
-            " code += 'PERIOD_RISE = ' + that.sourcelist.{0}.period  + ';\\n';",
-            " code += 'riseobjval = ' + that.sourcelist.{0}.objval  +';\\n';",
-            " code += that.sourcelist.{0}.code ;",
+    "watch":["period","select","dea"],
+    "exec_code":["
+        if (that.sourcelist.{0}.select == true) {
+             code += that.sourcelist.{0}.title;
+             code += 'PERIOD = ' + that.sourcelist.{0}.period  + ';\\n';
+             code += that.sourcelist.{0}.code ;
+            if (that.sourcelist.{0}.dea == true){
+                code += 'if dea < 0:\\n'; 
+                code += '    \t  kstop;\\n'
+            }
              
-        "}"
-    ]
-
-
+        }"]
     
 }

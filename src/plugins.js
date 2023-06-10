@@ -4,7 +4,7 @@ const path = require('path');
 const axios = require( 'axios');
 const fs = require("fs")
 
-axios.defaults.timeout = 3000;
+axios.defaults.timeout = 10000;
 
 async function axios_get(url){
   console.log(url)
@@ -13,7 +13,7 @@ async function axios_get(url){
     return resp   
   } catch (err){
     console.log("get error")
-    //console.log (err.response.status)
+    //console.log (err)
     return -1
   }
 }
@@ -93,7 +93,7 @@ async function list_request(url){
 
 }
 async function requests(url){
- 
+  
   await app.mainWin.webContents.send('installinfo','正在下载插件信息')
   ret = await list_request(url)
   if ( ret != -1){
